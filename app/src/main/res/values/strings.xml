@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Accel</string>
+
+    <!--MAIN ACTIVITY-->
+    <string name="modules">Modules</string>
+    <string-array name="modules_options">
+        <item>Budget Assistant</item>
+    </string-array>
+
+    <!--BUDGET ASSISTANT ACTIVITY-->
+    <string name="action_new_budget">New Budget</string>
+    <string name="action_add_category">Add category</string>
+    <string name="action_summary">Summary</string>
 </resources>

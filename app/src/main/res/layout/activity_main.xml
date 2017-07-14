@@ -11,7 +11,16 @@
     tools:context="com.hfad.accel.MainActivity">
 
     <TextView
+        android:id="@+id/txt_modules"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="@string/modules"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <ListView
+        android:id="@+id/lv_modules_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_modules"
+        android:entries="@array/modules_options"/>
 </RelativeLayout>
