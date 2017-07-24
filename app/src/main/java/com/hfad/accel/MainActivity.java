@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView lvModules = (ListView) findViewById(R.id.lv_modules_options);
+        ListView lvModules = (ListView) findViewById(R.id.listView_modules_options);
         lvModules.setOnItemClickListener(new AdapterView.OnItemClickListener(
         ) {
             @Override

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Accel</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
     <!--MAIN ACTIVITY-->
     <string name="modules">Modules</string>
@@ -11,4 +13,5 @@
     <string name="action_new_budget">New Budget</string>
     <string name="action_add_category">Add category</string>
     <string name="action_summary">Summary</string>
+    <string name="textView_msg_salary">Please input your salary</string>
 </resources>
