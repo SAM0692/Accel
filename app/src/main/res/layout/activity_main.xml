@@ -8,19 +8,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.hfad.accel.MainActivity">
+    tools:context="com.sam.accel.MainActivity">
 
     <TextView
-        android:id="@+id/textView_modules"
+        android:id="@+id/textview_modules"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/modules"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/textColor"/>
 
     <ListView
-        android:id="@+id/listView_modules_options"
+        android:id="@+id/listview_modules_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView_modules"
+        android:layout_below="@id/textview_modules"
         android:entries="@array/modules_options"/>
 </RelativeLayout>

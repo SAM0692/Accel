@@ -1,4 +1,4 @@
-package com.hfad.accel.budget.model;
+package com.sam.accel.budget.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

@@ -1,4 +1,4 @@
-package com.hfad.accel.budget.fragment;
+package com.sam.accel.budget.fragment;
 
 
 import android.app.AlertDialog;
@@ -9,31 +9,25 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.hfad.accel.R;
+import com.sam.accel.R;
+import com.sam.accel.budget.interfaces.DialogButtonListener;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewBudgetFragment extends DialogFragment {
+public class BudgetDialogFragment extends DialogFragment {
 
+    DialogButtonListener nbdListener;
 
-    public interface NewBudgetDialogButtonListener {
-        void onDialogPositiveClick(DialogFragment dialog);
-        void onDialogNegativeClick(DialogFragment dialog);
-    }
-
-    NewBudgetDialogButtonListener nbdListener;
+    private int layoutReference;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try{
-            nbdListener = (NewBudgetDialogButtonListener) context;
+            nbdListener = (DialogButtonListener) context;
         } catch(ClassCastException e) {
             throw new ClassCastException(context.toString() + "must be implemented");
         }
@@ -46,21 +40,29 @@ public class NewBudgetFragment extends DialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        builder.setView(inflater.inflate(R.layout.budget_dialog_new_budget, null))
+        builder.setView(inflater.inflate(layoutReference, null))
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        nbdListener.onDialogPositiveClick(NewBudgetFragment.this);
+                        nbdListener.onDialogPositiveClick(BudgetDialogFragment.this);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        nbdListener.onDialogNegativeClick(NewBudgetFragment.this);
+                        nbdListener.onDialogNegativeClick(BudgetDialogFragment.this);
                     }
                 });
 
 
         return builder.create();
+    }
+
+    public int getLayoutReference() {
+        return layoutReference;
+    }
+
+    public void setLayoutReference(int layoutReference) {
+        this.layoutReference = layoutReference;
     }
 }

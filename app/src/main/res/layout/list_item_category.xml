@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="10dp">
+
+    <TextView
+        android:id="@+id/textview_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/textColor"/>
+
+    <TextView
+        android:id="@+id/textview_spent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_category_name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/textColor"/>
+
+    <EditText
+        android:id="@+id/edittext_amount"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:inputType="numberDecimal"
+        android:textAlignment="textEnd"/>
+
+    <Button
+        android:id="@+id/button_register_expense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="+"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+</RelativeLayout>

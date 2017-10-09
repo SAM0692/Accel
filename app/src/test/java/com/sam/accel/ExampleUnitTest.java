@@ -1,4 +1,4 @@
-package com.hfad.accel;
+package com.sam.accel;
 
 import org.junit.Test;
 

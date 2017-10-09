@@ -13,5 +13,7 @@
     <string name="action_new_budget">New Budget</string>
     <string name="action_add_category">Add category</string>
     <string name="action_summary">Summary</string>
-    <string name="textView_msg_salary">Please input your salary</string>
+    <string name="textview_income">Please input your income</string>
+    <string name="textview_category_name">Name the category</string>
+    <string name="textview_category_limit">Set a limit</string>
 </resources>

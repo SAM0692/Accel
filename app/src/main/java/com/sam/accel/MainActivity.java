@@ -1,4 +1,4 @@
-package com.hfad.accel;
+package com.sam.accel;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.hfad.accel.budget.BudgetActivity;
+import com.sam.accel.budget.BudgetActivity;
 
 public class MainActivity extends Activity {
 
@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView lvModules = (ListView) findViewById(R.id.listView_modules_options);
+        ListView lvModules = (ListView) findViewById(R.id.listview_modules_options);
         lvModules.setOnItemClickListener(new AdapterView.OnItemClickListener(
         ) {
             @Override

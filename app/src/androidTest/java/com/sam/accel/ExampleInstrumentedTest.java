@@ -1,4 +1,4 @@
-package com.hfad.accel;
+package com.sam.accel;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
