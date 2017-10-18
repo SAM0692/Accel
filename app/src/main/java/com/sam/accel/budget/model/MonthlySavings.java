@@ -14,7 +14,9 @@ public class MonthlySavings extends RealmObject {
 
     @PrimaryKey
     private int id;
-    private Budget budget;
+    private int idBudget;
+    private float income;
+    private float spent;
     private float saved;
     @Required
     private Date date;
@@ -27,12 +29,12 @@ public class MonthlySavings extends RealmObject {
         this.id = id;
     }
 
-    public Budget getBudget() {
-        return budget;
+    public int getIdBudget() {
+        return idBudget;
     }
 
-    public void setBudget(Budget budget) {
-        this.budget = budget;
+    public void setIdBudget(int idBudget) {
+        this.idBudget = idBudget;
     }
 
     public float getSaved() {
@@ -49,5 +51,19 @@ public class MonthlySavings extends RealmObject {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public float getSpent() { return spent; }
+
+    public void setSpent(float spent) {
+        this.spent = spent;
+    }
+
+    public float getIncome() {
+        return income;
+    }
+
+    public void setIncome(float income) {
+        this.income = income;
     }
 }

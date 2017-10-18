@@ -11,11 +11,14 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sam.accel.R;
 import com.sam.accel.budget.database.BudgetDatabaseManager;
 import com.sam.accel.budget.interfaces.DialogButtonListener;
 import com.sam.accel.budget.fragment.BudgetDialogFragment;
+import com.sam.accel.budget.model.Budget;
+import com.sam.accel.budget.model.MonthlySavings;
 
 public class BudgetActivity extends Activity
         implements DialogButtonListener {
@@ -24,9 +27,15 @@ public class BudgetActivity extends Activity
 
     BudgetDatabaseManager dbManager;
 
+    Budget activeBudget;
+
     Menu budgetMenu;
     MenuItem miAddCategory;
     MenuItem miSummary;
+
+    String income;
+    String spent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,20 @@ public class BudgetActivity extends Activity
         category.setAdapter(adapter);
 
         dbManager = new BudgetDatabaseManager(this);
+
+        loadBudget();
+    }
+
+    private void loadBudget() {
+        activeBudget = dbManager.selectActiveBudget();
+
+        if (activeBudget != null) {
+            MonthlySavings month = dbManager.selectCurrentMonth(activeBudget.getId());
+            spent = Float.toString(month.getSpent());
+            income = Float.toString(month.getIncome());
+            TextView tvIncome = (TextView) findViewById(R.id.textview_income);
+            tvIncome.setText(spent + " / " + income);
+        }
     }
 
     @Override
@@ -98,18 +121,19 @@ public class BudgetActivity extends Activity
     }
 
     private void createNewBudget(DialogFragment dialog) {
-        String income;
         Dialog d = dialog.getDialog();
         EditText etIncome = (EditText) d.findViewById(R.id.edittext_income);
         income = etIncome.getText().toString();
 
-//        dbManager.insertBudget(Float.valueOf(income));
+        dbManager.closeActiveBudget();
+        dbManager.insertBudget(Float.valueOf(income));
 
         miAddCategory.setEnabled(true);
         miSummary.setEnabled(true);
 
-        TextView tvIncome = (TextView) findViewById(R.id.textview_income);
-        tvIncome.setText("0 / " + income);
+        loadBudget();
+
+        Toast.makeText(this, "A new budget has been created", Toast.LENGTH_SHORT).show();
     }
 
     private void createNewCategory(DialogFragment dialog) {

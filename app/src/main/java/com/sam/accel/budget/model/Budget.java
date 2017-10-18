@@ -15,7 +15,7 @@ public class Budget extends RealmObject {
     private int id;
     private Date creationDate;
     private Date closingDate;
-    private float income;
+    private float baseIncome;
     private float totalIncome;
     private float totalSavings;
 
@@ -43,12 +43,12 @@ public class Budget extends RealmObject {
         this.closingDate = closingDate;
     }
 
-    public float getIncome() {
-        return income;
+    public float getBaseIncome() {
+        return baseIncome;
     }
 
-    public void setIncome(float income) {
-        this.income = income;
+    public void setBaseIncome(float baseIncome) {
+        this.baseIncome = baseIncome;
     }
 
     public float getTotalIncome() {
