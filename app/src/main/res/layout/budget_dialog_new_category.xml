@@ -12,8 +12,7 @@
     <EditText
         android:id="@+id/edittext_category_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/textview_category_limit"
@@ -24,6 +23,7 @@
     <EditText
         android:id="@+id/edittext_category_limit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
 
 </LinearLayout>

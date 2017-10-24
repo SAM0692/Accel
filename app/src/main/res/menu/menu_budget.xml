@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".budgetAssistant.BudgetAssistantActivity">
 
-    <item
-        android:id="@+id/action_add_category"
-        android:title="@string/action_add_category"
-        android:icon="@drawable/ic_add_white_24dp"
-
-        android:showAsAction="ifRoom"/>
+    <!--<item-->
+        <!--android:id="@+id/action_add_category"-->
+        <!--android:title="@string/action_add_category"-->
+        <!--android:icon="@drawable/ic_add_white_24dp"-->
+        <!--android:showAsAction="never"/>-->
     <item
         android:id="@+id/action_new_budget"
         android:title="@string/action_new_budget"

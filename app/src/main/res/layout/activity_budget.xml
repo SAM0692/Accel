@@ -20,4 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/button_add_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_add_category"
+        android:onClick="onButtonAddCategoryClick"
+        android:enabled="false"/>
 </LinearLayout>

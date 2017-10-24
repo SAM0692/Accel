@@ -4,12 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sam.accel.budget.model.Budget;
+import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.MonthlySavings;
 
 import java.util.Date;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
@@ -36,20 +39,6 @@ public class BudgetDatabaseManager {
         return newId;
     }
 
-    public void insertBudget(float income) {
-        // CREATE A NEW ID
-        int newId = createNewId(new Budget());
-        Log.d("NEWID", "the new Budget id is: " + newId);
-        realm.beginTransaction();
-        Budget newBudget = realm.createObject(Budget.class, newId);
-        newBudget.setCreationDate(new Date());
-        newBudget.setBaseIncome(income);
-
-        realm.commitTransaction();
-
-        insertNewMonth(newBudget);
-    }
-
     public void closeActiveBudget() {
         Budget activeBudget = selectActiveBudget();
 
@@ -62,7 +51,25 @@ public class BudgetDatabaseManager {
         }
     }
 
-    public void insertNewMonth(Budget activeBudget) {
+
+    // INSERT
+    public void insertBudget(float income) {
+        // CREATE A NEW ID
+        int newId = createNewId(new Budget());
+        Log.d("NEWID", "the new Budget id is: " + newId);
+        realm.beginTransaction();
+
+        Budget newBudget = realm.createObject(Budget.class, newId);
+        newBudget.setCreationDate(new Date());
+        newBudget.setBaseIncome(income);
+
+        realm.commitTransaction();
+
+        insertMonth(newBudget);
+    }
+
+
+    public void insertMonth(Budget activeBudget) {
         int newId = createNewId(new MonthlySavings());
         Log.d("NEWID", "the new MonthlySaving id is: " + newId);
         realm.beginTransaction();
@@ -75,6 +82,24 @@ public class BudgetDatabaseManager {
         realm.commitTransaction();
     }
 
+    public Category insertCategory(String name, float limit, int idBudget) {
+        Category newCategory;
+        int newId = createNewId(new Category());
+
+        realm.beginTransaction();
+
+        newCategory = realm.createObject(Category.class, newId);
+        newCategory.setName(name);
+        newCategory.setLimit(limit);
+        newCategory.setIdBudget(idBudget);
+
+        realm.commitTransaction();
+
+        return newCategory;
+    }
+
+
+    // SELECT
     public Budget selectActiveBudget() {
         Budget budget;
 
@@ -98,5 +123,18 @@ public class BudgetDatabaseManager {
         realm.commitTransaction();
 
         return month;
+    }
+
+    public List<Category> selectCategories(int idBudget) {
+        List<Category> categories;
+
+        realm.beginTransaction();
+
+        categories = realm.where(Category.class).equalTo("idBudget", idBudget).findAll();
+        categories = realm.copyFromRealm(categories);
+
+        realm.commitTransaction();
+
+        return categories;
     }
 }

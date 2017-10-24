@@ -14,8 +14,9 @@ public class Category extends RealmObject {
     private int id;
     @Required
     private String name;
-    private float spendingLimit;
+    private float limit;
     private float spent;
+    private int idBudget;
 
     public int getId() {
         return id;
@@ -33,12 +34,12 @@ public class Category extends RealmObject {
         this.name = name;
     }
 
-    public float getSpendingLimit() {
-        return spendingLimit;
+    public float getLimit() {
+        return limit;
     }
 
-    public void setSpendingLimit(float spendingLimit) {
-        this.spendingLimit = spendingLimit;
+    public void setLimit(float limit) {
+        this.limit = limit;
     }
 
     public float getSpent() {
@@ -47,5 +48,13 @@ public class Category extends RealmObject {
 
     public void setSpent(float spent) {
         this.spent = spent;
+    }
+
+    public int getIdBudget() {
+        return idBudget;
+    }
+
+    public void setIdBudget(int idBudget) {
+        this.idBudget = idBudget;
     }
 }

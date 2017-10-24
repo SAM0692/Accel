@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +20,11 @@ import com.sam.accel.budget.database.BudgetDatabaseManager;
 import com.sam.accel.budget.interfaces.DialogButtonListener;
 import com.sam.accel.budget.fragment.BudgetDialogFragment;
 import com.sam.accel.budget.model.Budget;
+import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.MonthlySavings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BudgetActivity extends Activity
         implements DialogButtonListener {
@@ -26,11 +32,12 @@ public class BudgetActivity extends Activity
     int layoutReference;
 
     BudgetDatabaseManager dbManager;
+    CategoryAdapter adapter;
+    List<Category> categories;
 
     Budget activeBudget;
 
     Menu budgetMenu;
-    MenuItem miAddCategory;
     MenuItem miSummary;
 
     String income;
@@ -42,24 +49,32 @@ public class BudgetActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
-        ListView category = (ListView) findViewById(R.id.listview_category);
-        CategoryAdapter adapter = new CategoryAdapter(this);
-        category.setAdapter(adapter);
-
         dbManager = new BudgetDatabaseManager(this);
 
         loadBudget();
     }
 
     private void loadBudget() {
+
         activeBudget = dbManager.selectActiveBudget();
 
         if (activeBudget != null) {
+            //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
             MonthlySavings month = dbManager.selectCurrentMonth(activeBudget.getId());
             spent = Float.toString(month.getSpent());
             income = Float.toString(month.getIncome());
             TextView tvIncome = (TextView) findViewById(R.id.textview_income);
             tvIncome.setText(spent + " / " + income);
+
+            //LOAD THE LIST OF THE BUDGET'S CATEGORIES
+            categories = dbManager.selectCategories(activeBudget.getId());
+            adapter = new CategoryAdapter(this, categories);
+            ListView category = (ListView) findViewById(R.id.listview_category);
+            category.setAdapter(adapter);
+
+            //ENABLE THE "ADD CATEGORY" BUTTON
+            Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
+            btnAddCategory.setEnabled(true);
         }
     }
 
@@ -70,9 +85,7 @@ public class BudgetActivity extends Activity
 
         budgetMenu = menu;
 
-        miAddCategory = budgetMenu.getItem(0);
-        miAddCategory.setEnabled(false);
-        miSummary = budgetMenu.getItem(2);
+        miSummary = budgetMenu.getItem(1);
         miSummary.setEnabled(false);
         return true;
     }
@@ -83,9 +96,6 @@ public class BudgetActivity extends Activity
             case R.id.action_new_budget:
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
-            case R.id.action_add_category:
-                layoutReference = R.layout.budget_dialog_new_category;
-                break;
             case R.id.action_summary:
                 break;
             default:
@@ -95,6 +105,11 @@ public class BudgetActivity extends Activity
         showBudgetDialog();
 
         return true;
+    }
+
+    public void onButtonAddCategoryClick(View view) {
+        layoutReference = R.layout.budget_dialog_new_category;
+        showBudgetDialog();
     }
 
     public void showBudgetDialog() {
@@ -128,7 +143,6 @@ public class BudgetActivity extends Activity
         dbManager.closeActiveBudget();
         dbManager.insertBudget(Float.valueOf(income));
 
-        miAddCategory.setEnabled(true);
         miSummary.setEnabled(true);
 
         loadBudget();
@@ -137,13 +151,39 @@ public class BudgetActivity extends Activity
     }
 
     private void createNewCategory(DialogFragment dialog) {
-        CharSequence name, limit;
+        String name;
+        float limit;
         Dialog d = dialog.getDialog();
         EditText etname = (EditText) d.findViewById(R.id.edittext_category_name);
         EditText etlimit = (EditText) d.findViewById(R.id.edittext_category_limit);
-        name = etname.getText();
-        limit = etlimit.getText();
-        Log.i("BudgetActivity", "Name: " + name);
-        Log.i("BudgetActivity", "Limit: " + limit);
+        name = etname.getText().toString();
+        limit = Float.valueOf(etlimit.getText().toString());
+
+        if (validateLimit(limit)) {
+            Category cat = dbManager.insertCategory(name, limit, activeBudget.getId());
+            categories.add(cat);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private boolean validateLimit(float limit) {
+        float currentLimit = 0;
+        float budgetLimit = dbManager.selectCurrentMonth(activeBudget.getId()).getIncome();
+        float excess = 0;
+        boolean valid = true;
+
+        for (Category c : categories) {
+            currentLimit += c.getLimit();
+        }
+
+        excess = (currentLimit + limit) - budgetLimit;
+
+        if (excess > 0) {
+            Toast.makeText(this, "The category limit you entered exceeds this month's by: " + excess
+                    , Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+
+        return valid;
     }
 }

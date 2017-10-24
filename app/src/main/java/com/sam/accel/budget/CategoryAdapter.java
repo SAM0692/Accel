@@ -9,6 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sam.accel.R;
+import com.sam.accel.budget.model.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by SAcevedoM on 28/09/2017.
@@ -17,30 +21,33 @@ import com.sam.accel.R;
 public class CategoryAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
+    private List<Category> categories;
 
-    public CategoryAdapter(Context context) {
+    public CategoryAdapter(Context context, List<Category> categories) {
         this.context = context;
+        this.categories = categories;
         inflater = (LayoutInflater) context.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return categories.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return categories.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        Category category = categories.get(position);
 
        if(convertView == null) {
            convertView = inflater.inflate(R.layout.list_item_category, parent, false);
@@ -57,17 +64,14 @@ public class CategoryAdapter extends BaseAdapter {
         TextView categoryName = holder.categoryName;
         TextView spent = holder.spent;
 
-        CharSequence cs = "TestCat";
-        CharSequence ca = "0000/0000";
-
-        categoryName.setText(cs);
-        spent.setText(ca);
+        categoryName.setText(category.getName());
+        spent.setText(category.getSpent() + " / " + category.getLimit());
 
         return convertView;
     }
 
     private static class ViewHolder {
-        public TextView categoryName;
-        public TextView spent;
+        TextView categoryName;
+         TextView spent;
     }
 }
