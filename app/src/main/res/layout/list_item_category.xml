@@ -4,28 +4,27 @@
     android:layout_height="match_parent"
     android:paddingStart="10dp">
 
-    <TextView
-        android:id="@+id/textview_category_name"
+    <RelativeLayout
+        android:id="@+id/rl_cat_info"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/textColor"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textview_spent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textview_category_name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/textColor"/>
+        <TextView
+            android:id="@+id/textview_category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor" />
 
-    <EditText
-        android:id="@+id/edittext_amount"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:inputType="numberDecimal"
-        android:textAlignment="textEnd"/>
+        <TextView
+            android:id="@+id/textview_available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_category_name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor" />
+    </RelativeLayout>
+
 
     <Button
         android:id="@+id/button_register_expense"
@@ -33,6 +32,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="+"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:onClick="onButtonRegisterExpense"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <!--THIS ELEMENT WILL BE PLACED AT THE LEFT SIDE OF THE BUTTON-->
+    <EditText
+        android:id="@+id/edittext_amount"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/button_register_expense"
+        android:layout_marginTop="5dp"
+        android:inputType="numberDecimal"
+        android:maxLength="9"
+        android:textAlignment="textEnd" />
+
 
 </RelativeLayout>

@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sam.accel.R;
 import com.sam.accel.budget.model.Category;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,31 +49,63 @@ public class CategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        Category category = categories.get(position);
 
-       if(convertView == null) {
-           convertView = inflater.inflate(R.layout.list_item_category, parent, false);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_item_category, parent, false);
 
-           holder = new ViewHolder();
-           holder.categoryName = (TextView) convertView.findViewById(R.id.textview_category_name);
-           holder.spent = (TextView) convertView.findViewById(R.id.textview_spent);
+            holder = new ViewHolder();
+            holder.categoryName = (TextView) convertView.findViewById(R.id.textview_category_name);
+            holder.available = (TextView) convertView.findViewById(R.id.textview_available);
+            holder.amount = (EditText) convertView.findViewById(R.id.edittext_amount);
+            holder.regExpense = (Button) convertView.findViewById(R.id.button_register_expense);
 
-           convertView.setTag(holder);
-       } else {
-           holder = (ViewHolder) convertView.getTag();
-       }
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
+
+        final Category category = categories.get(position);
+        final TextView available = holder.available;
+        final EditText amount = holder.amount;
         TextView categoryName = holder.categoryName;
-        TextView spent = holder.spent;
+        Button regExpense = holder.regExpense;
 
         categoryName.setText(category.getName());
-        spent.setText(category.getSpent() + " / " + category.getLimit());
+        available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+        regExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String amountText = amount.getText().toString();
+
+                if(amountText.equals("")) {
+                    Toast.makeText(v.getContext(), "Enter an amount first"
+                            , Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                float amountToReg = Float.valueOf(amountText);
+                float totalSpent = category.getSpent() + amountToReg;
+
+                if ((category.getLimit() - totalSpent) < 0) {
+                    Toast.makeText(v.getContext(), "You don't have that much left for this category!!"
+                            , Toast.LENGTH_SHORT).show();
+                } else {
+                    category.setSpent(totalSpent);
+                    available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+                }
+
+                amount.setText("");
+            }
+        });
 
         return convertView;
     }
 
     private static class ViewHolder {
         TextView categoryName;
-         TextView spent;
+        TextView available;
+        EditText amount;
+        Button regExpense;
     }
 }

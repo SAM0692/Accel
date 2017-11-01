@@ -112,6 +112,8 @@ public class BudgetActivity extends Activity
         showBudgetDialog();
     }
 
+
+
     public void showBudgetDialog() {
         BudgetDialogFragment dialog = new BudgetDialogFragment();
         dialog.setLayoutReference(layoutReference);
@@ -127,12 +129,17 @@ public class BudgetActivity extends Activity
                 break;
             case R.layout.budget_dialog_new_category:
                 createNewCategory(dialog);
+                break;
         }
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         dialog.getDialog().cancel();
+    }
+
+    public void onButtonRegisterExpense(View view) {
+
     }
 
     private void createNewBudget(DialogFragment dialog) {
