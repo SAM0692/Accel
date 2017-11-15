@@ -34,6 +34,7 @@ public class BudgetActivity extends Activity
     BudgetDatabaseManager dbManager;
     CategoryAdapter adapter;
     List<Category> categories;
+    MonthlySavings month;
 
     Budget activeBudget;
 
@@ -60,7 +61,7 @@ public class BudgetActivity extends Activity
 
         if (activeBudget != null) {
             //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
-            MonthlySavings month = dbManager.selectCurrentMonth(activeBudget.getId());
+            month = dbManager.selectCurrentMonth(activeBudget.getId());
             spent = Float.toString(month.getSpent());
             income = Float.toString(month.getIncome());
             TextView tvIncome = (TextView) findViewById(R.id.textview_income);
@@ -86,7 +87,10 @@ public class BudgetActivity extends Activity
         budgetMenu = menu;
 
         miSummary = budgetMenu.getItem(1);
-        miSummary.setEnabled(false);
+
+        if (activeBudget != null) {
+            miSummary.setEnabled(true);
+        }
         return true;
     }
 
@@ -97,6 +101,7 @@ public class BudgetActivity extends Activity
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
             case R.id.action_summary:
+                layoutReference = R.layout.budget_dialog_summary;
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -111,7 +116,6 @@ public class BudgetActivity extends Activity
         layoutReference = R.layout.budget_dialog_new_category;
         showBudgetDialog();
     }
-
 
 
     public void showBudgetDialog() {
@@ -192,5 +196,13 @@ public class BudgetActivity extends Activity
         }
 
         return valid;
+    }
+
+    private void verifyMonth() {
+
+    }
+
+    public Budget getActiveBudget() {
+        return activeBudget;
     }
 }

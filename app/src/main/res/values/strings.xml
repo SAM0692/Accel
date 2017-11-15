@@ -12,8 +12,15 @@
     <!--BUDGET ASSISTANT ACTIVITY-->
     <string name="action_new_budget">New Budget</string>
     <string name="action_summary">Summary</string>
+    <string name="button_add_category">Add category</string>
     <string name="textview_income">Please input your baseIncome</string>
     <string name="textview_category_name">Name the category</string>
     <string name="textview_category_limit">Set a limit</string>
-    <string name="button_add_category">Add category</string>
+    <string name="textview_budget_base_income">Budget base income: </string>
+    <string name="textview_budget_creation_date">Creation date: </string>
+    <string name="textview_budget_total_income">Total income: </string>
+    <string name="textview_budget_total_savings"> Total savings: </string>
+    <string name="dialog_new_budget_title">Create a new budget</string>
+    <string name="dialog_budget_summary_title">Budget summary</string>
+    <string name="dialog_new_category_title">Create a new category</string>
 </resources>

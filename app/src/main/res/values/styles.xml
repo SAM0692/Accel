@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="android:Theme.Material.Light">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimaryDark">@android:color/tertiary_text_light</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
 </resources>

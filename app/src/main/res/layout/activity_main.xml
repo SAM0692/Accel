@@ -15,8 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/modules"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/textColor"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <ListView
         android:id="@+id/listview_modules_options"
