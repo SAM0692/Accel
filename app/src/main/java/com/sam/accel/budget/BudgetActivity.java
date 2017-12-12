@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +22,7 @@ import com.sam.accel.budget.model.Budget;
 import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.MonthlySavings;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class BudgetActivity extends Activity
@@ -41,8 +40,8 @@ public class BudgetActivity extends Activity
     Menu budgetMenu;
     MenuItem miSummary;
 
-    String income;
-    String spent;
+    float income;
+    float spent;
 
 
     @Override
@@ -62,13 +61,11 @@ public class BudgetActivity extends Activity
         if (activeBudget != null) {
             //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
             month = dbManager.selectCurrentMonth(activeBudget.getId());
-            spent = Float.toString(month.getSpent());
-            income = Float.toString(month.getIncome());
-            TextView tvIncome = (TextView) findViewById(R.id.textview_income);
-            tvIncome.setText(spent + " / " + income);
+            verifyMonth();
+            updateMonthAvailable();
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
-            categories = dbManager.selectCategories(activeBudget.getId());
+            categories = dbManager.selectCategoriesByBudget(activeBudget.getId());
             adapter = new CategoryAdapter(this, categories);
             ListView category = (ListView) findViewById(R.id.listview_category);
             category.setAdapter(adapter);
@@ -77,6 +74,13 @@ public class BudgetActivity extends Activity
             Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
             btnAddCategory.setEnabled(true);
         }
+    }
+
+    public void updateMonthAvailable() {
+        income = month.getIncome();
+        spent = month.getSpent();
+        TextView tvIncome = (TextView) findViewById(R.id.textview_income);
+        tvIncome.setText(income + " / " + (income - spent));
     }
 
     @Override
@@ -142,17 +146,14 @@ public class BudgetActivity extends Activity
         dialog.getDialog().cancel();
     }
 
-    public void onButtonRegisterExpense(View view) {
-
-    }
 
     private void createNewBudget(DialogFragment dialog) {
         Dialog d = dialog.getDialog();
         EditText etIncome = (EditText) d.findViewById(R.id.edittext_income);
-        income = etIncome.getText().toString();
+        income = Float.valueOf(etIncome.getText().toString());
 
         dbManager.closeActiveBudget();
-        dbManager.insertBudget(Float.valueOf(income));
+        dbManager.insertBudget(income);
 
         miSummary.setEnabled(true);
 
@@ -199,7 +200,35 @@ public class BudgetActivity extends Activity
     }
 
     private void verifyMonth() {
+        Calendar today = Calendar.getInstance();
 
+        if ((int) today.get(Calendar.DAY_OF_MONTH) == 1) {
+            Budget updateBudget = new Budget();
+            MonthlySavings updateMonth = new MonthlySavings();
+
+            updateBudget.setTotalIncome(activeBudget.getTotalIncome() + month.getIncome());
+            float savings = month.getIncome() - month.getSpent();
+            if (savings > 0) {
+                updateMonth.setSaved(savings);
+                updateBudget.setTotalSavings(savings);
+            }
+
+            dbManager.updateActiveBudget(updateBudget);
+            dbManager.updateCurrentMonth(updateMonth);
+
+            // CREATE A NEW MONTH AND UPDATE IT'S SPENT VALUE IF NEEDED
+            dbManager.insertMonth(activeBudget);
+            if (savings < 0) {
+                float spent = savings * -1;
+
+                updateMonth = new MonthlySavings();
+                updateMonth.setSpent(spent);
+
+                dbManager.updateCurrentMonth(updateMonth);
+            }
+
+
+        }
     }
 
     public Budget getActiveBudget() {

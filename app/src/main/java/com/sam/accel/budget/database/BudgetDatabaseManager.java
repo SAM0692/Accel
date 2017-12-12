@@ -28,6 +28,10 @@ public class BudgetDatabaseManager {
         realm = Realm.getDefaultInstance();
     }
 
+
+
+    ////-------------------------------------------------------------------------------------- UTILS
+
     private int createNewId(RealmObject modelClass) {
         int newId;
         Number lastId = realm.where(modelClass.getClass()).max("id");
@@ -52,7 +56,9 @@ public class BudgetDatabaseManager {
     }
 
 
-    // INSERT
+    ////------------------------------------------------------------------------------------- INSERT
+
+    // BUDGET TABLE
     public void insertBudget(float income) {
         // CREATE A NEW ID
         int newId = createNewId(new Budget());
@@ -68,7 +74,7 @@ public class BudgetDatabaseManager {
         insertMonth(newBudget);
     }
 
-
+    // MONTHLYSAVINGS TABLE
     public void insertMonth(Budget activeBudget) {
         int newId = createNewId(new MonthlySavings());
         Log.d("NEWID", "the new MonthlySaving id is: " + newId);
@@ -82,6 +88,7 @@ public class BudgetDatabaseManager {
         realm.commitTransaction();
     }
 
+    // CATEGORY TABLE
     public Category insertCategory(String name, float limit, int idBudget) {
         Category newCategory;
         int newId = createNewId(new Category());
@@ -99,7 +106,9 @@ public class BudgetDatabaseManager {
     }
 
 
-    // SELECT
+    ////------------------------------------------------------------------------------------- SELECT
+
+    // BUDGET TABLE
     public Budget selectActiveBudget() {
         Budget budget;
 
@@ -112,6 +121,7 @@ public class BudgetDatabaseManager {
         return budget;
     }
 
+    // MONTHLYSAVINGS TABLE
     public MonthlySavings selectCurrentMonth(int idBudget) {
         MonthlySavings month;
 
@@ -125,7 +135,20 @@ public class BudgetDatabaseManager {
         return month;
     }
 
-    public List<Category> selectCategories(int idBudget) {
+    // CATEGORY TABLE
+    public Category selectCategoryById(int idCategory) {
+        Category category;
+
+        realm.beginTransaction();
+
+        category = realm.where(Category.class).equalTo("id", idCategory).findFirst();
+
+        realm.commitTransaction();
+
+        return category;
+    }
+
+    public List<Category> selectCategoriesByBudget(int idBudget) {
         List<Category> categories;
 
         realm.beginTransaction();
@@ -136,5 +159,51 @@ public class BudgetDatabaseManager {
         realm.commitTransaction();
 
         return categories;
+    }
+
+
+    ////------------------------------------------------------------------------------------- UPDATE
+
+    // BUDGET TABLE
+    public void updateActiveBudget(Budget updateBudget) {
+        Budget activeBudget = selectActiveBudget();
+
+        realm.beginTransaction();
+
+        activeBudget.setTotalIncome(activeBudget.getTotalIncome() + updateBudget.getTotalIncome());
+        activeBudget.setTotalSavings(activeBudget.getTotalIncome() + updateBudget.getTotalSavings());
+
+        realm.commitTransaction();
+    }
+
+    // MONTHLYSAVINGS TABLE
+    public void updateCurrentMonth(MonthlySavings updateMonth) {
+        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget().getId());
+
+        realm.beginTransaction();
+
+        currentMonth.setIncome(currentMonth.getIncome() + updateMonth.getIncome());
+        currentMonth.setSpent(currentMonth.getSpent() + updateMonth.getSpent());
+
+        if (updateMonth.getSaved() != 0) {
+            currentMonth.setSaved(updateMonth.getSaved());
+        }
+
+        realm.commitTransaction();
+    }
+
+    // CATEGORY TABLE
+    public void updateCategory(Category updateCategory) {
+        Category category = selectCategoryById(updateCategory.getId());
+        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget().getId());
+
+        realm.beginTransaction();
+
+        if (updateCategory.getSpent() != 0) {
+            category.setSpent(category.getSpent() + updateCategory.getSpent());
+            currentMonth.setSpent(currentMonth.getSpent() + updateCategory.getSpent());
+        }
+
+        realm.commitTransaction();
     }
 }

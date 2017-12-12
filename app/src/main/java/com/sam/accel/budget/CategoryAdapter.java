@@ -1,7 +1,9 @@
 package com.sam.accel.budget;
 
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sam.accel.R;
+import com.sam.accel.budget.database.BudgetDatabaseManager;
 import com.sam.accel.budget.model.Category;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class CategoryAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private List<Category> categories;
+    private BudgetDatabaseManager dbManager;
 
     public CategoryAdapter(Context context, List<Category> categories) {
         this.context = context;
@@ -77,24 +81,53 @@ public class CategoryAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 String amountText = amount.getText().toString();
+                dbManager = new BudgetDatabaseManager(context);
 
-                if(amountText.equals("")) {
+                if (amountText.equals("")) {
                     Toast.makeText(v.getContext(), "Enter an amount first"
                             , Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+
                 float amountToReg = Float.valueOf(amountText);
-                float totalSpent = category.getSpent() + amountToReg;
+                final float totalSpent = category.getSpent() + amountToReg;
 
                 if ((category.getLimit() - totalSpent) < 0) {
-                    Toast.makeText(v.getContext(), "You don't have that much left for this category!!"
-                            , Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle(category.getName() + " limit exceeded");
+                    builder.setMessage("The amount you are trying to register exceeds the for this category" +
+                            " if you choose to continue it can make the month's expenses to go over the limit.\n" +
+                            "Do you wish to continue?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            category.setSpent(totalSpent);
+                            dbManager.updateCategory(category);
+
+                            available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
                 } else {
-                    category.setSpent(totalSpent);
-                    available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+                    Category updateCategory = new Category();
+                    updateCategory.setId(category.getId());
+                    updateCategory.setSpent(totalSpent);
+                    dbManager.updateCategory(updateCategory);
+
+                    available.setText(category.getLimit() + " / " + (category.getLimit() - updateCategory.getSpent()));
                 }
 
+                BudgetActivity activity = (BudgetActivity) context;
+                activity.updateMonthAvailable();
                 amount.setText("");
             }
         });
