@@ -60,12 +60,12 @@ public class BudgetActivity extends Activity
 
         if (activeBudget != null) {
             //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
-            month = dbManager.selectCurrentMonth(activeBudget.getId());
+            month = dbManager.selectCurrentMonth(activeBudget);
             verifyMonth();
             updateMonthAvailable();
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
-            categories = dbManager.selectCategoriesByBudget(activeBudget.getId());
+            categories = dbManager.selectCategoriesByBudget(activeBudget);
             adapter = new CategoryAdapter(this, categories);
             ListView category = (ListView) findViewById(R.id.listview_category);
             category.setAdapter(adapter);
@@ -172,7 +172,7 @@ public class BudgetActivity extends Activity
         limit = Float.valueOf(etlimit.getText().toString());
 
         if (validateLimit(limit)) {
-            Category cat = dbManager.insertCategory(name, limit, activeBudget.getId());
+            Category cat = dbManager.insertCategory(name, limit, activeBudget);
             categories.add(cat);
             adapter.notifyDataSetChanged();
         }
@@ -180,7 +180,7 @@ public class BudgetActivity extends Activity
 
     private boolean validateLimit(float limit) {
         float currentLimit = 0;
-        float budgetLimit = dbManager.selectCurrentMonth(activeBudget.getId()).getIncome();
+        float budgetLimit = dbManager.selectCurrentMonth(activeBudget).getIncome();
         float excess = 0;
         boolean valid = true;
 

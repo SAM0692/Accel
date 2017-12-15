@@ -15,7 +15,6 @@ public class Expense extends RealmObject {
     @PrimaryKey
     private int id;
     private MonthlySavings monthSavings;
-    private Category category;
     private float amount;
     @Required
     private Date date;
@@ -34,14 +33,6 @@ public class Expense extends RealmObject {
 
     public void setMonthSavings(MonthlySavings monthSavings) {
         this.monthSavings = monthSavings;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public float getAmount() {

@@ -81,7 +81,7 @@ public class BudgetDatabaseManager {
         realm.beginTransaction();
 
         MonthlySavings newMonth = realm.createObject(MonthlySavings.class, newId);
-        newMonth.setIdBudget(activeBudget.getId());
+        newMonth.setBudget(activeBudget);
         newMonth.setIncome(activeBudget.getBaseIncome());
         newMonth.setDate(new Date());
 
@@ -89,7 +89,7 @@ public class BudgetDatabaseManager {
     }
 
     // CATEGORY TABLE
-    public Category insertCategory(String name, float limit, int idBudget) {
+    public Category insertCategory(String name, float limit, Budget budget) {
         Category newCategory;
         int newId = createNewId(new Category());
 
@@ -98,7 +98,7 @@ public class BudgetDatabaseManager {
         newCategory = realm.createObject(Category.class, newId);
         newCategory.setName(name);
         newCategory.setLimit(limit);
-        newCategory.setIdBudget(idBudget);
+        newCategory.setBudget(budget);
 
         realm.commitTransaction();
 
@@ -122,12 +122,12 @@ public class BudgetDatabaseManager {
     }
 
     // MONTHLYSAVINGS TABLE
-    public MonthlySavings selectCurrentMonth(int idBudget) {
+    public MonthlySavings selectCurrentMonth(Budget activeBudget) {
         MonthlySavings month;
 
         realm.beginTransaction();
 
-        month = realm.where(MonthlySavings.class).equalTo("idBudget", idBudget)
+        month = realm.where(MonthlySavings.class).equalTo("budget.id", activeBudget.getId())
                 .findAllSorted("date", Sort.DESCENDING).first();
 
         realm.commitTransaction();
@@ -148,12 +148,12 @@ public class BudgetDatabaseManager {
         return category;
     }
 
-    public List<Category> selectCategoriesByBudget(int idBudget) {
+    public List<Category> selectCategoriesByBudget(Budget budget) {
         List<Category> categories;
 
         realm.beginTransaction();
 
-        categories = realm.where(Category.class).equalTo("idBudget", idBudget).findAll();
+        categories = realm.where(Category.class).equalTo("budget.id", budget.getId()).findAll();
         categories = realm.copyFromRealm(categories);
 
         realm.commitTransaction();
@@ -178,7 +178,7 @@ public class BudgetDatabaseManager {
 
     // MONTHLYSAVINGS TABLE
     public void updateCurrentMonth(MonthlySavings updateMonth) {
-        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget().getId());
+        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget());
 
         realm.beginTransaction();
 
@@ -195,7 +195,7 @@ public class BudgetDatabaseManager {
     // CATEGORY TABLE
     public void updateCategory(Category updateCategory) {
         Category category = selectCategoryById(updateCategory.getId());
-        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget().getId());
+        MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget());
 
         realm.beginTransaction();
 
@@ -203,6 +203,7 @@ public class BudgetDatabaseManager {
             category.setSpent(category.getSpent() + updateCategory.getSpent());
             currentMonth.setSpent(currentMonth.getSpent() + updateCategory.getSpent());
         }
+
 
         realm.commitTransaction();
     }
