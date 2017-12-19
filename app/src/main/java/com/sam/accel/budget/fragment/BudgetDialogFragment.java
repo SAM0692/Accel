@@ -16,8 +16,11 @@ import com.sam.accel.R;
 import com.sam.accel.budget.BudgetActivity;
 import com.sam.accel.budget.interfaces.DialogButtonListener;
 import com.sam.accel.budget.model.Budget;
+import com.sam.accel.budget.model.Category;
+import com.sam.accel.budget.model.MonthlySavings;
 
 import java.text.DateFormat;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,6 +84,7 @@ public class BudgetDialogFragment extends DialogFragment {
                 break;
             case R.layout.budget_dialog_new_category:
                 titleReference = R.string.dialog_new_category_title;
+                loadAvailable();
                 break;
         }
     }
@@ -102,6 +106,20 @@ public class BudgetDialogFragment extends DialogFragment {
         tvSavings.append(" " + Float.toString(activeBudget.getTotalSavings()));
 
 
+    }
+
+    private void loadAvailable() {
+        BudgetActivity activity = (BudgetActivity) getActivity();
+        MonthlySavings month = activity.getMonth();
+        List<Category> categories = activity.getCategories();
+        TextView tvAvailable = (TextView)dialogLayoutView.findViewById(R.id.textview_category_available);
+        float available = month.getIncome();
+
+        for(Category c : categories) {
+            available = available - c.getLimit();
+        }
+
+        tvAvailable.setText("Available income: " + available);
     }
 
 

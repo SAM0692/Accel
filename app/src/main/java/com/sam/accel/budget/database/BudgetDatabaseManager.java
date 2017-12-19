@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.sam.accel.budget.model.Budget;
 import com.sam.accel.budget.model.Category;
+import com.sam.accel.budget.model.Expense;
 import com.sam.accel.budget.model.MonthlySavings;
 
 import java.util.Date;
@@ -193,7 +194,7 @@ public class BudgetDatabaseManager {
     }
 
     // CATEGORY TABLE
-    public void updateCategory(Category updateCategory) {
+    public void updateCategory(Category updateCategory, Expense newExpense) {
         Category category = selectCategoryById(updateCategory.getId());
         MonthlySavings currentMonth = selectCurrentMonth(selectActiveBudget());
 
@@ -202,6 +203,10 @@ public class BudgetDatabaseManager {
         if (updateCategory.getSpent() != 0) {
             category.setSpent(category.getSpent() + updateCategory.getSpent());
             currentMonth.setSpent(currentMonth.getSpent() + updateCategory.getSpent());
+        }
+
+        if (newExpense != null) {
+            category.getExpenseList().add(newExpense);
         }
 
 

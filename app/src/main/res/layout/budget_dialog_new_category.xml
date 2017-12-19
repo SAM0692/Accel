@@ -20,6 +20,12 @@
         android:layout_height="wrap_content"
         android:text="@string/textview_category_limit"/>
 
+    <TextView
+        android:id="@+id/textview_category_available"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textview_category_limit"/>
+
     <EditText
         android:id="@+id/edittext_category_limit"
         android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package com.sam.accel.budget.model;
 
 import java.util.Date;
 
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -12,28 +13,8 @@ import io.realm.annotations.Required;
 
 public class Expense extends RealmObject {
 
-    @PrimaryKey
-    private int id;
-    private MonthlySavings monthSavings;
     private float amount;
-    @Required
     private Date date;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public MonthlySavings getMonthSavings() {
-        return monthSavings;
-    }
-
-    public void setMonthSavings(MonthlySavings monthSavings) {
-        this.monthSavings = monthSavings;
-    }
 
     public float getAmount() {
         return amount;

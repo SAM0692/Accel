@@ -16,7 +16,9 @@ import android.widget.Toast;
 import com.sam.accel.R;
 import com.sam.accel.budget.database.BudgetDatabaseManager;
 import com.sam.accel.budget.model.Category;
+import com.sam.accel.budget.model.Expense;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,6 +84,7 @@ public class CategoryAdapter extends BaseAdapter {
             public void onClick(View v) {
                 String amountText = amount.getText().toString();
                 dbManager = new BudgetDatabaseManager(context);
+                final Category updateCategory = new Category();
 
                 if (amountText.equals("")) {
                     Toast.makeText(v.getContext(), "Enter an amount first"
@@ -90,10 +93,10 @@ public class CategoryAdapter extends BaseAdapter {
                 }
 
 
-                float amountToReg = Float.valueOf(amountText);
-                final float totalSpent = category.getSpent() + amountToReg;
+                final float amountToReg = Float.valueOf(amountText);
+                final Expense newExpense = new Expense();
 
-                if ((category.getLimit() - totalSpent) < 0) {
+                if ((category.getLimit() - amountToReg) < 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle(category.getName() + " limit exceeded");
                     builder.setMessage("The amount you are trying to register exceeds the for this category" +
@@ -103,8 +106,11 @@ public class CategoryAdapter extends BaseAdapter {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            category.setSpent(totalSpent);
-                            dbManager.updateCategory(category);
+                            newExpense.setAmount(amountToReg);
+                            newExpense.setDate(new Date());
+
+                            updateCategory.setSpent(amountToReg);
+                            dbManager.updateCategory(updateCategory, newExpense);
 
                             available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
                         }
@@ -118,10 +124,9 @@ public class CategoryAdapter extends BaseAdapter {
 
                     builder.show();
                 } else {
-                    Category updateCategory = new Category();
                     updateCategory.setId(category.getId());
-                    updateCategory.setSpent(totalSpent);
-                    dbManager.updateCategory(updateCategory);
+                    updateCategory.setSpent(amountToReg);
+                    dbManager.updateCategory(updateCategory, newExpense);
 
                     available.setText(category.getLimit() + " / " + (category.getLimit() - updateCategory.getSpent()));
                 }

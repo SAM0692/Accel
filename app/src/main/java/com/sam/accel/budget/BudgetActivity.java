@@ -234,4 +234,12 @@ public class BudgetActivity extends Activity
     public Budget getActiveBudget() {
         return activeBudget;
     }
+
+    public MonthlySavings getMonth() {
+        return month;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
 }

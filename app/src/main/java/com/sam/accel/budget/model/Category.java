@@ -2,6 +2,7 @@ package com.sam.accel.budget.model;
 
 import java.util.List;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -19,7 +20,7 @@ public class Category extends RealmObject {
     private float limit;
     private float spent;
     private Budget budget;
-    private List<Expense> expenseList;
+    private RealmList<Expense> expenseList;
 
     public int getId() {
         return id;
@@ -61,11 +62,11 @@ public class Category extends RealmObject {
         this.budget = budget;
     }
 
-    public List<Expense> getExpenseList() {
+    public RealmList<Expense> getExpenseList() {
         return expenseList;
     }
 
-    public void setExpenseList(List<Expense> expenseList) {
+    public void setExpenseList(RealmList<Expense> expenseList) {
         this.expenseList = expenseList;
     }
 }
