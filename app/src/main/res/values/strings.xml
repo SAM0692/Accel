@@ -18,7 +18,6 @@
     <string name="textview_category_limit">Set a limit</string>
     <string name="textview_budget_base_income">Budget base income: </string>
     <string name="textview_budget_creation_date">Creation date: </string>
-    <string name="textview_budget_total_income">Total income: </string>
     <string name="textview_budget_total_savings"> Total savings: </string>
     <string name="dialog_new_budget_title">Create a new budget</string>
     <string name="dialog_budget_summary_title">Budget summary</string>

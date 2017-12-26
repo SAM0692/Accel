@@ -57,7 +57,7 @@ public class CategoryAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_category, parent, false);
+            convertView = inflater.inflate(R.layout.budget_list_item_category, parent, false);
 
             holder = new ViewHolder();
             holder.categoryName = (TextView) convertView.findViewById(R.id.textview_category_name);

@@ -97,12 +97,10 @@ public class BudgetDialogFragment extends DialogFragment {
 
         TextView tvBaseIncome = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_base_income);
         TextView tvDate = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_creation_date);
-        TextView tvTotalIncome = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_total_income);
         TextView tvSavings = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_total_savings);
 
         tvBaseIncome.append(" " + Float.toString(activeBudget.getBaseIncome()));
         tvDate.append(" " + strCreationDate);
-        tvTotalIncome.append(" " + Float.toString(activeBudget.getTotalIncome()));
         tvSavings.append(" " + Float.toString(activeBudget.getTotalSavings()));
 
 

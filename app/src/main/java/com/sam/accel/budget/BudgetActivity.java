@@ -47,7 +47,7 @@ public class BudgetActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_budget);
+        setContentView(R.layout.budget_activity_budget);
 
         dbManager = new BudgetDatabaseManager(this);
 
@@ -60,12 +60,12 @@ public class BudgetActivity extends Activity
 
         if (activeBudget != null) {
             //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
-            month = dbManager.selectCurrentMonth(activeBudget);
+            month = dbManager.selectCurrentMonth(activeBudget.getId());
             verifyMonth();
             updateMonthAvailable();
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
-            categories = dbManager.selectCategoriesByBudget(activeBudget);
+            categories = dbManager.selectCategoriesByBudgetAsList(activeBudget);
             adapter = new CategoryAdapter(this, categories);
             ListView category = (ListView) findViewById(R.id.listview_category);
             category.setAdapter(adapter);
@@ -180,7 +180,7 @@ public class BudgetActivity extends Activity
 
     private boolean validateLimit(float limit) {
         float currentLimit = 0;
-        float budgetLimit = dbManager.selectCurrentMonth(activeBudget).getIncome();
+        float budgetLimit = dbManager.selectCurrentMonth(activeBudget.getId()).getIncome();
         float excess = 0;
         boolean valid = true;
 
@@ -201,12 +201,17 @@ public class BudgetActivity extends Activity
 
     private void verifyMonth() {
         Calendar today = Calendar.getInstance();
+        Calendar monthDate = Calendar.getInstance();
+        monthDate.setTime(month.getDate());
 
-        if ((int) today.get(Calendar.DAY_OF_MONTH) == 1) {
+        int day = today.get(Calendar.DAY_OF_MONTH);
+        int m1 = today.get(Calendar.MONTH);
+        int m2 = monthDate.get(Calendar.MONTH);
+
+        if (day == 1 && m1 != m2) {
             Budget updateBudget = new Budget();
             MonthlySavings updateMonth = new MonthlySavings();
 
-            updateBudget.setTotalIncome(activeBudget.getTotalIncome() + month.getIncome());
             float savings = month.getIncome() - month.getSpent();
             if (savings > 0) {
                 updateMonth.setSaved(savings);
@@ -217,7 +222,7 @@ public class BudgetActivity extends Activity
             dbManager.updateCurrentMonth(updateMonth);
 
             // CREATE A NEW MONTH AND UPDATE IT'S SPENT VALUE IF NEEDED
-            dbManager.insertMonth(activeBudget);
+            month = dbManager.insertMonth(activeBudget);
             if (savings < 0) {
                 float spent = savings * -1;
 
@@ -227,7 +232,9 @@ public class BudgetActivity extends Activity
                 dbManager.updateCurrentMonth(updateMonth);
             }
 
+            dbManager.resetCategories();
 
+            Toast.makeText(this, "A new month has started", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,5 +248,11 @@ public class BudgetActivity extends Activity
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbManager.close();
     }
 }
