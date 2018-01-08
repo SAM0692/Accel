@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/textview_income"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dip"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -18,12 +18,13 @@
     <ListView
         android:id="@+id/listview_category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dip"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/button_add_category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dip"
         android:text="@string/button_add_category"
         android:onClick="onButtonAddCategoryClick"
         android:enabled="false"/>

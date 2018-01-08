@@ -17,32 +17,34 @@
 
         <TextView
             android:id="@+id/textview_available"
-            android:layout_width="wrap_content"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textview_category_name"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
     </RelativeLayout>
 
 
-    <Button
-        android:id="@+id/button_register_expense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:text="+"
-        android:onClick="onButtonRegisterExpense"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 
     <!--THIS ELEMENT WILL BE PLACED AT THE LEFT SIDE OF THE BUTTON-->
     <EditText
         android:id="@+id/edittext_amount"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/button_register_expense"
+        android:layout_toEndOf="@id/rl_cat_info"
         android:layout_marginTop="5dp"
         android:inputType="numberDecimal"
         android:maxLength="9"
         android:textAlignment="textEnd" />
+
+    <Button
+        android:id="@+id/button_register_expense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/edittext_amount"
+        android:text="+"
+        android:onClick="onButtonRegisterExpense"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
 </RelativeLayout>

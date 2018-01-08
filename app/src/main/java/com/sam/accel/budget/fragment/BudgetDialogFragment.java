@@ -18,8 +18,11 @@ import com.sam.accel.budget.interfaces.DialogButtonListener;
 import com.sam.accel.budget.model.Budget;
 import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.MonthlySavings;
+import com.sam.accel.budget.utils.NumberFormatter;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -49,7 +52,6 @@ public class BudgetDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
         dialogLayoutView = inflater.inflate(layoutReference, null);
 
@@ -99,9 +101,9 @@ public class BudgetDialogFragment extends DialogFragment {
         TextView tvDate = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_creation_date);
         TextView tvSavings = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_total_savings);
 
-        tvBaseIncome.append(" " + Float.toString(activeBudget.getBaseIncome()));
+        tvBaseIncome.append(" " + NumberFormatter.formatFloat(activeBudget.getBaseIncome()));
         tvDate.append(" " + strCreationDate);
-        tvSavings.append(" " + Float.toString(activeBudget.getTotalSavings()));
+        tvSavings.append(" " + NumberFormatter.formatFloat(activeBudget.getTotalSavings()));
 
 
     }
@@ -117,7 +119,7 @@ public class BudgetDialogFragment extends DialogFragment {
             available = available - c.getLimit();
         }
 
-        tvAvailable.setText("Available income: " + available);
+        tvAvailable.setText("Available income: " + NumberFormatter.formatFloat(available));
     }
 
 

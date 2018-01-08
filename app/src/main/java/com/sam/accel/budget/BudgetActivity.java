@@ -1,13 +1,17 @@
 package com.sam.accel.budget;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,6 +25,7 @@ import com.sam.accel.budget.fragment.BudgetDialogFragment;
 import com.sam.accel.budget.model.Budget;
 import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.MonthlySavings;
+import com.sam.accel.budget.utils.NumberFormatter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -69,6 +74,34 @@ public class BudgetActivity extends Activity
             adapter = new CategoryAdapter(this, categories);
             ListView category = (ListView) findViewById(R.id.listview_category);
             category.setAdapter(adapter);
+            category.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView tvCategoryName = (TextView) view.findViewById(R.id.textview_category_name);
+                    String categoryName = tvCategoryName.getText().toString();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    builder.setTitle(categoryName);
+                    builder.setMessage(R.string.dialog_message_delete);
+                    // YES
+                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    // NO
+                    builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    return true;
+                }
+            });
 
             //ENABLE THE "ADD CATEGORY" BUTTON
             Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
@@ -80,7 +113,7 @@ public class BudgetActivity extends Activity
         income = month.getIncome();
         spent = month.getSpent();
         TextView tvIncome = (TextView) findViewById(R.id.textview_income);
-        tvIncome.setText(income + " / " + (income - spent));
+        tvIncome.setText(NumberFormatter.formatAvailable(income, spent));
     }
 
     @Override
@@ -145,7 +178,6 @@ public class BudgetActivity extends Activity
     public void onDialogNegativeClick(DialogFragment dialog) {
         dialog.getDialog().cancel();
     }
-
 
     private void createNewBudget(DialogFragment dialog) {
         Dialog d = dialog.getDialog();

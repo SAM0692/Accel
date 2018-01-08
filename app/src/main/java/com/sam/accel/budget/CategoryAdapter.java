@@ -17,6 +17,7 @@ import com.sam.accel.R;
 import com.sam.accel.budget.database.BudgetDatabaseManager;
 import com.sam.accel.budget.model.Category;
 import com.sam.accel.budget.model.Expense;
+import com.sam.accel.budget.utils.NumberFormatter;
 
 import java.util.Date;
 import java.util.List;
@@ -78,7 +79,7 @@ public class CategoryAdapter extends BaseAdapter {
         Button regExpense = holder.regExpense;
 
         categoryName.setText(category.getName());
-        available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+        available.setText(NumberFormatter.formatAvailable(category.getLimit(), category.getSpent()));
         regExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,11 +100,10 @@ public class CategoryAdapter extends BaseAdapter {
                 if ((category.getLimit() - amountToReg) < 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle(category.getName() + " limit exceeded");
-                    builder.setMessage("The amount you are trying to register exceeds the for this category" +
-                            " if you choose to continue it can make the month's expenses to go over the limit.\n" +
-                            "Do you wish to continue?");
+                    builder.setMessage(R.string.dialog_message_limit_exceeded);
                     builder.setCancelable(false);
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    // YES
+                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             newExpense.setAmount(amountToReg);
@@ -112,10 +112,11 @@ public class CategoryAdapter extends BaseAdapter {
                             updateCategory.setSpent(amountToReg);
                             dbManager.updateCategory(updateCategory, newExpense);
 
-                            available.setText(category.getLimit() + " / " + (category.getLimit() - category.getSpent()));
+                            available.setText(NumberFormatter.formatAvailable(category.getLimit(), updateCategory.getSpent()));
                         }
                     });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    // NO
+                    builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -128,7 +129,7 @@ public class CategoryAdapter extends BaseAdapter {
                     updateCategory.setSpent(amountToReg);
                     dbManager.updateCategory(updateCategory, newExpense);
 
-                    available.setText(category.getLimit() + " / " + (category.getLimit() - updateCategory.getSpent()));
+                    available.setText(NumberFormatter.formatAvailable(category.getLimit(), updateCategory.getSpent()));
                 }
 
                 BudgetActivity activity = (BudgetActivity) context;

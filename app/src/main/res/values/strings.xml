@@ -8,6 +8,8 @@
     <string-array name="modules_options">
         <item>Budget Assistant</item>
     </string-array>
+    <string name="option_yes">Yes</string>
+    <string name="option_no">No</string>
 
     <!--BUDGET ASSISTANT ACTIVITY-->
     <string name="action_new_budget">New Budget</string>
@@ -22,4 +24,10 @@
     <string name="dialog_new_budget_title">Create a new budget</string>
     <string name="dialog_budget_summary_title">Budget summary</string>
     <string name="dialog_new_category_title">Create a new category</string>
+    <string name="dialog_message_limit_exceeded">
+        The amount you are trying to register exceeds the for this category
+                            if you choose to continue it can make the month's expenses to go over the limit.\n
+                            Do you wish to continue?
+    </string>
+    <string name="dialog_message_delete">Are you sure you want to delete this category?</string>
 </resources>
