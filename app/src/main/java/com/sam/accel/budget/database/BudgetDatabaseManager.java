@@ -214,4 +214,15 @@ public class BudgetDatabaseManager {
 
         realm.commitTransaction();
     }
+
+    //// -------------------------------------------------------------------------------------DELETE
+    public void deleteCategory(int idCategory) {
+        Category category = selectCategoryById(idCategory);
+
+        realm.beginTransaction();
+
+        category.deleteFromRealm();
+
+        realm.commitTransaction();
+    }
 }

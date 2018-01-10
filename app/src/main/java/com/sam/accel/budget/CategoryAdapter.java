@@ -109,6 +109,7 @@ public class CategoryAdapter extends BaseAdapter {
                             newExpense.setAmount(amountToReg);
                             newExpense.setDate(new Date());
 
+                            updateCategory.setId(category.getId());
                             updateCategory.setSpent(amountToReg);
                             dbManager.updateCategory(updateCategory, newExpense);
 
@@ -125,6 +126,9 @@ public class CategoryAdapter extends BaseAdapter {
 
                     builder.show();
                 } else {
+                    newExpense.setAmount(amountToReg);
+                    newExpense.setDate(new Date());
+
                     updateCategory.setId(category.getId());
                     updateCategory.setSpent(amountToReg);
                     dbManager.updateCategory(updateCategory, newExpense);

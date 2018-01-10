@@ -43,6 +43,7 @@ public class BudgetActivity extends Activity
     Budget activeBudget;
 
     Menu budgetMenu;
+    MenuItem miAddCategory;
     MenuItem miSummary;
 
     float income;
@@ -78,6 +79,7 @@ public class BudgetActivity extends Activity
 
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    final int categoryPosition = position;
                     TextView tvCategoryName = (TextView) view.findViewById(R.id.textview_category_name);
                     String categoryName = tvCategoryName.getText().toString();
 
@@ -85,10 +87,13 @@ public class BudgetActivity extends Activity
                     builder.setTitle(categoryName);
                     builder.setMessage(R.string.dialog_message_delete);
                     // YES
-                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener(){
+                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            Category catForDeletion = categories.get(categoryPosition);
+                            categories.remove(catForDeletion);
+                            adapter.notifyDataSetChanged();
+                            dbManager.deleteCategory(catForDeletion.getId());
                         }
                     });
                     // NO
@@ -99,13 +104,16 @@ public class BudgetActivity extends Activity
                         }
                     });
 
+                    builder.show();
+//                    Toast.makeText(BudgetActivity.this, "Testing long click", Toast.LENGTH_SHORT).show();
+
                     return true;
                 }
             });
 
             //ENABLE THE "ADD CATEGORY" BUTTON
-            Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
-            btnAddCategory.setEnabled(true);
+//            Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
+//            btnAddCategory.setEnabled(true);
         }
     }
 
@@ -123,9 +131,11 @@ public class BudgetActivity extends Activity
 
         budgetMenu = menu;
 
-        miSummary = budgetMenu.getItem(1);
+        miAddCategory = budgetMenu.getItem(1);
+        miSummary = budgetMenu.getItem(2);
 
         if (activeBudget != null) {
+            miAddCategory.setEnabled(true);
             miSummary.setEnabled(true);
         }
         return true;
@@ -136,6 +146,9 @@ public class BudgetActivity extends Activity
         switch (item.getItemId()) {
             case R.id.action_new_budget:
                 layoutReference = R.layout.budget_dialog_new_budget;
+                break;
+            case R.id.action_add_category:
+                Toast.makeText(this, "Adding category", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_summary:
                 layoutReference = R.layout.budget_dialog_summary;

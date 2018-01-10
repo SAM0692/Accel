@@ -14,7 +14,7 @@
     <!--BUDGET ASSISTANT ACTIVITY-->
     <string name="action_new_budget">New Budget</string>
     <string name="action_summary">Summary</string>
-    <string name="button_add_category">Add category</string>
+    <string name="action_add_category">Add category</string>
     <string name="textview_income">Please input your baseIncome</string>
     <string name="textview_category_name">Name the category</string>
     <string name="textview_category_limit">Set a limit</string>
@@ -26,7 +26,7 @@
     <string name="dialog_new_category_title">Create a new category</string>
     <string name="dialog_message_limit_exceeded">
         The amount you are trying to register exceeds the for this category
-                            if you choose to continue it can make the month's expenses to go over the limit.\n
+                            if you choose to continue it can make the month\'s expenses to go over the limit.
                             Do you wish to continue?
     </string>
     <string name="dialog_message_delete">Are you sure you want to delete this category?</string>
