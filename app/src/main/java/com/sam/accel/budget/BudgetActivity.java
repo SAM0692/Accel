@@ -47,7 +47,7 @@ public class BudgetActivity extends Activity
     MenuItem miSummary;
 
     float income;
-    float spent;
+    float available;
 
 
     @Override
@@ -68,7 +68,6 @@ public class BudgetActivity extends Activity
             //LOAD THE CURRENT MONTH OF THE ACTIVE BUDGET
             month = dbManager.selectCurrentMonth(activeBudget.getId());
             verifyMonth();
-            updateMonthAvailable();
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
             categories = dbManager.selectCategoriesByBudgetAsList(activeBudget);
@@ -109,14 +108,22 @@ public class BudgetActivity extends Activity
                     return true;
                 }
             });
+
+            // UPDATE THE MONTH'S AVAILABLE INCOME
+            updateMonthAvailable();
         }
     }
 
     public void updateMonthAvailable() {
         income = month.getIncome();
-        spent = month.getSpent();
+        available = 0;
+
+        for(Category c : categories) {
+            available = available + c.getLimit();
+        }
+
         TextView tvIncome = (TextView) findViewById(R.id.textview_income);
-        tvIncome.setText(NumberFormatter.formatAvailable(income, spent));
+        tvIncome.setText(NumberFormatter.formatAvailable(income, available));
     }
 
     @Override
@@ -143,7 +150,6 @@ public class BudgetActivity extends Activity
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
             case R.id.action_add_category:
-                Toast.makeText(this, "Testing add button", Toast.LENGTH_SHORT).show();
                 layoutReference = R.layout.budget_dialog_new_category;
                 break;
             case R.id.action_summary:
@@ -212,6 +218,7 @@ public class BudgetActivity extends Activity
             Category cat = dbManager.insertCategory(name, limit, activeBudget);
             categories.add(cat);
             adapter.notifyDataSetChanged();
+            updateMonthAvailable();
         }
     }
 

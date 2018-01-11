@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.sam.accel.budget.BudgetActivity"></activity>
+        <activity android:name="com.sam.accel.budget.BudgetActivity"/>
     </application>
 
 </manifest>
