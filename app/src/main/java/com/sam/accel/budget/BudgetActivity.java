@@ -105,15 +105,10 @@ public class BudgetActivity extends Activity
                     });
 
                     builder.show();
-//                    Toast.makeText(BudgetActivity.this, "Testing long click", Toast.LENGTH_SHORT).show();
 
                     return true;
                 }
             });
-
-            //ENABLE THE "ADD CATEGORY" BUTTON
-//            Button btnAddCategory = (Button) findViewById(R.id.button_add_category);
-//            btnAddCategory.setEnabled(true);
         }
     }
 
@@ -148,7 +143,8 @@ public class BudgetActivity extends Activity
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
             case R.id.action_add_category:
-                Toast.makeText(this, "Adding category", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Testing add button", Toast.LENGTH_SHORT).show();
+                layoutReference = R.layout.budget_dialog_new_category;
                 break;
             case R.id.action_summary:
                 layoutReference = R.layout.budget_dialog_summary;
@@ -160,11 +156,6 @@ public class BudgetActivity extends Activity
         showBudgetDialog();
 
         return true;
-    }
-
-    public void onButtonAddCategoryClick(View view) {
-        layoutReference = R.layout.budget_dialog_new_category;
-        showBudgetDialog();
     }
 
 
@@ -201,6 +192,7 @@ public class BudgetActivity extends Activity
         dbManager.insertBudget(income);
 
         miSummary.setEnabled(true);
+        miAddCategory.setEnabled(true);
 
         loadBudget();
 
