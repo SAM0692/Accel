@@ -34,6 +34,7 @@ public class BudgetDialogFragment extends DialogFragment {
 
     private int layoutReference;
     private int titleReference;
+    private boolean noCancel;
 
     View dialogLayoutView;
 
@@ -47,6 +48,7 @@ public class BudgetDialogFragment extends DialogFragment {
             throw new ClassCastException(context.toString() + "must be implemented");
         }
 
+        noCancel = false;
     }
 
     @Override
@@ -65,12 +67,16 @@ public class BudgetDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 nbdListener.onDialogPositiveClick(BudgetDialogFragment.this);
             }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                nbdListener.onDialogNegativeClick(BudgetDialogFragment.this);
-            }
         });
+
+        if (!noCancel) {
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    nbdListener.onDialogNegativeClick(BudgetDialogFragment.this);
+                }
+            });
+        }
 
         return builder.create();
     }
@@ -83,6 +89,7 @@ public class BudgetDialogFragment extends DialogFragment {
             case R.layout.budget_dialog_summary:
                 titleReference = R.string.dialog_budget_summary_title;
                 loadSummaryData();
+                noCancel = true;
                 break;
             case R.layout.budget_dialog_new_category:
                 titleReference = R.string.dialog_new_category_title;
@@ -112,10 +119,10 @@ public class BudgetDialogFragment extends DialogFragment {
         BudgetActivity activity = (BudgetActivity) getActivity();
         MonthlySavings month = activity.getMonth();
         List<Category> categories = activity.getCategories();
-        TextView tvAvailable = (TextView)dialogLayoutView.findViewById(R.id.textview_category_available);
+        TextView tvAvailable = (TextView) dialogLayoutView.findViewById(R.id.textview_category_available);
         float available = month.getIncome();
 
-        for(Category c : categories) {
+        for (Category c : categories) {
             available = available - c.getLimit();
         }
 

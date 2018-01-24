@@ -118,7 +118,7 @@ public class BudgetActivity extends Activity
         income = month.getIncome();
         available = 0;
 
-        for(Category c : categories) {
+        for (Category c : categories) {
             available = available + c.getLimit();
         }
 
@@ -167,6 +167,7 @@ public class BudgetActivity extends Activity
 
     public void showBudgetDialog() {
         BudgetDialogFragment dialog = new BudgetDialogFragment();
+
         dialog.setLayoutReference(layoutReference);
         dialog.show(getFragmentManager(), "BudgetDialog");
     }
@@ -203,6 +204,11 @@ public class BudgetActivity extends Activity
         loadBudget();
 
         Toast.makeText(this, "A new budget has been created", Toast.LENGTH_SHORT).show();
+
+        // Creating General category
+//        Category generalCat = dbManager.insertCategory("General", income, activeBudget);
+//        categories.add(generalCat);
+//        adapter.notifyDataSetChanged();
     }
 
     private void createNewCategory(DialogFragment dialog) {

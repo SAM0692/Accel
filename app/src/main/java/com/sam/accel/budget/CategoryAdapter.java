@@ -71,7 +71,6 @@ public class CategoryAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
         final Category category = categories.get(position);
         final TextView available = holder.available;
         final EditText amount = holder.amount;

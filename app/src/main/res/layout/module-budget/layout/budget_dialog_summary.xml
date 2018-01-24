@@ -20,14 +20,6 @@
         android:text="@string/textview_budget_base_income" />
 
     <TextView
-        android:id="@+id/textview_budget_saved_last"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/textview_budget_saved_last">
-
-    </TextView>
-
-    <TextView
         android:id="@+id/textview_budget_total_savings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
