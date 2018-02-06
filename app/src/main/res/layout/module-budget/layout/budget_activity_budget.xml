@@ -7,12 +7,30 @@
     android:orientation="vertical"
     tools:context="com.sam.accel.budget.BudgetActivity">
 
-    <TextView
-        android:id="@+id/textview_income"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/textview_income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_action_add"
+            android:background="@android:color/white"
+            style="?android:attr/borderlessButtonStyle"
+            android:onClick="onClickAddIncome"
+            />
+
+    </LinearLayout>
+
+
 
 
     <ListView

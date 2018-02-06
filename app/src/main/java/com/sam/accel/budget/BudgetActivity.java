@@ -172,6 +172,11 @@ public class BudgetActivity extends Activity
         dialog.show(getFragmentManager(), "BudgetDialog");
     }
 
+    public void onClickAddIncome(View view) {
+        layoutReference = R.layout.budget_dialog_add_income;
+        showBudgetDialog();
+    }
+
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
@@ -181,6 +186,9 @@ public class BudgetActivity extends Activity
                 break;
             case R.layout.budget_dialog_new_category:
                 createNewCategory(dialog);
+                break;
+            case R.layout.budget_dialog_add_income:
+                addIncome(dialog);
                 break;
         }
     }
@@ -205,10 +213,7 @@ public class BudgetActivity extends Activity
 
         Toast.makeText(this, "A new budget has been created", Toast.LENGTH_SHORT).show();
 
-        // Creating General category
-//        Category generalCat = dbManager.insertCategory("General", income, activeBudget);
-//        categories.add(generalCat);
-//        adapter.notifyDataSetChanged();
+
     }
 
     private void createNewCategory(DialogFragment dialog) {
@@ -224,6 +229,20 @@ public class BudgetActivity extends Activity
             Category cat = dbManager.insertCategory(name, limit, activeBudget);
             categories.add(cat);
             adapter.notifyDataSetChanged();
+            updateMonthAvailable();
+        }
+    }
+
+    public void addIncome(DialogFragment dialog) {
+        float income;
+        Dialog d = dialog.getDialog();
+        EditText etincome = (EditText) d.findViewById(R.id.edittext_add_income_amount);
+        income = Float.valueOf(etincome.getText().toString());
+
+        if(income > 0) {
+            MonthlySavings updateMonth = new MonthlySavings();
+            updateMonth.setIncome(income);
+            dbManager.updateCurrentMonth(updateMonth);
             updateMonthAvailable();
         }
     }

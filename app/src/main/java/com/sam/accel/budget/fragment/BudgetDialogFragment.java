@@ -95,6 +95,8 @@ public class BudgetDialogFragment extends DialogFragment {
                 titleReference = R.string.dialog_new_category_title;
                 loadAvailable();
                 break;
+            case R.layout.budget_dialog_add_income:
+                titleReference = R.string.dialog_add_income_title;
         }
     }
 

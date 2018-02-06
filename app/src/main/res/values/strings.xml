@@ -21,9 +21,11 @@
     <string name="textview_budget_base_income">Budget base income: </string>
     <string name="textview_budget_creation_date">Creation date: </string>
     <string name="textview_budget_total_savings"> Total savings: </string>
+    <string name="textview_add_income">Please input amount to add:</string>
     <string name="dialog_new_budget_title">Create a new budget</string>
     <string name="dialog_budget_summary_title">Budget summary</string>
     <string name="dialog_new_category_title">Create a new category</string>
+    <string name="dialog_add_income_title">Add income</string>
     <string name="dialog_message_limit_exceeded">
         The amount you are trying to register exceeds the for this category
                             if you choose to continue it can make the month\'s expenses to go over the limit.
