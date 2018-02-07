@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp">
 
     <TextView
         android:id="@+id/textview_category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/textview_category_name"/>
+        android:text="@string/textview_category_name" />
 
     <EditText
         android:id="@+id/edittext_category_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/textview_category_limit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/textview_category_limit"/>
-
-    <TextView
-        android:id="@+id/textview_category_available"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/textview_category_limit"/>
+        android:text="@string/textview_category_limit" />
 
     <EditText
         android:id="@+id/edittext_category_limit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal" />
+
+    <CheckBox
+        android:id="@+id/checkbox_category_temporary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/checkbox_category_type_message"/>
 
 </LinearLayout>

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -219,14 +220,17 @@ public class BudgetActivity extends Activity
     private void createNewCategory(DialogFragment dialog) {
         String name;
         float limit;
+        boolean temporary;
         Dialog d = dialog.getDialog();
         EditText etname = (EditText) d.findViewById(R.id.edittext_category_name);
         EditText etlimit = (EditText) d.findViewById(R.id.edittext_category_limit);
+        CheckBox cbtemporary = (CheckBox) d.findViewById(R.id.checkbox_category_temporary);
         name = etname.getText().toString();
         limit = Float.valueOf(etlimit.getText().toString());
+        temporary = cbtemporary.isChecked();
 
         if (validateLimit(limit)) {
-            Category cat = dbManager.insertCategory(name, limit, activeBudget);
+            Category cat = dbManager.insertCategory(name, limit, activeBudget, temporary);
             categories.add(cat);
             adapter.notifyDataSetChanged();
             updateMonthAvailable();

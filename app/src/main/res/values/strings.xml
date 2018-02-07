@@ -22,6 +22,7 @@
     <string name="textview_budget_creation_date">Creation date: </string>
     <string name="textview_budget_total_savings"> Total savings: </string>
     <string name="textview_add_income">Please input amount to add:</string>
+    <string name="checkbox_category_type_message">This month only</string>
     <string name="dialog_new_budget_title">Create a new budget</string>
     <string name="dialog_budget_summary_title">Budget summary</string>
     <string name="dialog_new_category_title">Create a new category</string>

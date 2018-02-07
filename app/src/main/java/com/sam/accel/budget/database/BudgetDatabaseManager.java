@@ -97,7 +97,7 @@ public class BudgetDatabaseManager {
     }
 
     // CATEGORY TABLE
-    public Category insertCategory(String name, float limit, Budget budget) {
+    public Category insertCategory(String name, float limit, Budget budget, boolean temporary) {
         Category newCategory;
         int newId = createNewId(new Category());
 
@@ -107,6 +107,7 @@ public class BudgetDatabaseManager {
         newCategory.setName(name);
         newCategory.setLimit(limit);
         newCategory.setBudget(budget);
+        newCategory.setTemporary(temporary);
 
         realm.commitTransaction();
 
@@ -209,7 +210,11 @@ public class BudgetDatabaseManager {
         realm.beginTransaction();
 
         for (Category c : categories) {
-            c.setSpent(0);
+            if(c.isTemporary()) {
+                c.deleteFromRealm();
+            } else {
+                c.setSpent(0);
+            }
         }
 
         realm.commitTransaction();

@@ -121,14 +121,11 @@ public class BudgetDialogFragment extends DialogFragment {
         BudgetActivity activity = (BudgetActivity) getActivity();
         MonthlySavings month = activity.getMonth();
         List<Category> categories = activity.getCategories();
-        TextView tvAvailable = (TextView) dialogLayoutView.findViewById(R.id.textview_category_available);
         float available = month.getIncome();
 
         for (Category c : categories) {
             available = available - c.getLimit();
         }
-
-        tvAvailable.setText("Available income: " + NumberFormatter.formatFloat(available));
     }
 
 

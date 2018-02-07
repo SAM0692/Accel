@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp">
 
     <TextView
         android:id="@+id/textview_add_income"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/textview_add_income"/>
+        android:text="@string/textview_add_income" />
 
     <EditText
         android:id="@+id/edittext_add_income_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal" />
 
 </LinearLayout>

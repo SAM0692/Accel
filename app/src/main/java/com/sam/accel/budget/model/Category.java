@@ -19,6 +19,7 @@ public class Category extends RealmObject {
     private String name;
     private float limit;
     private float spent;
+    private boolean temporary;
     private Budget budget;
     private RealmList<Expense> expenseList;
 
@@ -68,5 +69,13 @@ public class Category extends RealmObject {
 
     public void setExpenseList(RealmList<Expense> expenseList) {
         this.expenseList = expenseList;
+    }
+
+    public boolean isTemporary() {
+        return temporary;
+    }
+
+    public void setTemporary(boolean temporary) {
+        this.temporary = temporary;
     }
 }
