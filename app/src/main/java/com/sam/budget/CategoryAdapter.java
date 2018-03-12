@@ -1,4 +1,4 @@
-package com.sam.accel.budget;
+package com.sam.budget;
 
 import android.app.AlertDialog;
 import android.app.Service;
@@ -13,11 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sam.accel.R;
-import com.sam.accel.budget.database.BudgetDatabaseManager;
-import com.sam.accel.budget.model.Category;
-import com.sam.accel.budget.model.Expense;
-import com.sam.accel.budget.utils.NumberFormatter;
+import com.sam.budget.database.BudgetDatabaseManager;
+import com.sam.budget.model.Category;
+import com.sam.budget.model.Expense;
+import com.sam.budget.utils.NumberFormatter;
 
 import java.util.Date;
 import java.util.List;

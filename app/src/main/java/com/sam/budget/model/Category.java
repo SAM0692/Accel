@@ -1,6 +1,4 @@
-package com.sam.accel.budget.model;
-
-import java.util.List;
+package com.sam.budget.model;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

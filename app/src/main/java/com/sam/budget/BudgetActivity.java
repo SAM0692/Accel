@@ -1,4 +1,4 @@
-package com.sam.accel.budget;
+package com.sam.budget;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,14 +18,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sam.accel.R;
-import com.sam.accel.budget.database.BudgetDatabaseManager;
-import com.sam.accel.budget.interfaces.DialogButtonListener;
-import com.sam.accel.budget.fragment.BudgetDialogFragment;
-import com.sam.accel.budget.model.Budget;
-import com.sam.accel.budget.model.Category;
-import com.sam.accel.budget.model.MonthlySavings;
-import com.sam.accel.budget.utils.NumberFormatter;
+import com.sam.budget.database.BudgetDatabaseManager;
+import com.sam.budget.interfaces.DialogButtonListener;
+import com.sam.budget.fragment.BudgetDialogFragment;
+import com.sam.budget.model.Budget;
+import com.sam.budget.model.Category;
+import com.sam.budget.model.MonthlySavings;
+import com.sam.budget.utils.NumberFormatter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -44,7 +42,7 @@ public class BudgetActivity extends Activity
     Budget activeBudget;
 
     Menu budgetMenu;
-    MenuItem miAddCategory;
+    MenuItem miAddIncome;
     MenuItem miSummary;
 
     float income;
@@ -134,11 +132,11 @@ public class BudgetActivity extends Activity
 
         budgetMenu = menu;
 
-        miAddCategory = budgetMenu.getItem(1);
+        miAddIncome = budgetMenu.getItem(1);
         miSummary = budgetMenu.getItem(2);
 
         if (activeBudget != null) {
-            miAddCategory.setEnabled(true);
+            miAddIncome.setEnabled(true);
             miSummary.setEnabled(true);
         }
         return true;
@@ -150,8 +148,8 @@ public class BudgetActivity extends Activity
             case R.id.action_new_budget:
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
-            case R.id.action_add_category:
-                layoutReference = R.layout.budget_dialog_new_category;
+            case R.id.action_add_income:
+                layoutReference = R.layout.budget_dialog_add_income;
                 break;
             case R.id.action_summary:
                 layoutReference = R.layout.budget_dialog_summary;
@@ -171,11 +169,6 @@ public class BudgetActivity extends Activity
 
         dialog.setLayoutReference(layoutReference);
         dialog.show(getFragmentManager(), "BudgetDialog");
-    }
-
-    public void onClickAddIncome(View view) {
-        layoutReference = R.layout.budget_dialog_add_income;
-        showBudgetDialog();
     }
 
 
@@ -207,8 +200,8 @@ public class BudgetActivity extends Activity
         dbManager.closeActiveBudget();
         dbManager.insertBudget(income);
 
+        miAddIncome.setEnabled(true);
         miSummary.setEnabled(true);
-        miAddCategory.setEnabled(true);
 
         loadBudget();
 
@@ -243,7 +236,7 @@ public class BudgetActivity extends Activity
         EditText etincome = (EditText) d.findViewById(R.id.edittext_add_income_amount);
         income = Float.valueOf(etincome.getText().toString());
 
-        if(income > 0) {
+        if (income > 0) {
             MonthlySavings updateMonth = new MonthlySavings();
             updateMonth.setIncome(income);
             dbManager.updateCurrentMonth(updateMonth);

@@ -1,4 +1,4 @@
-package com.sam.accel.budget.utils;
+package com.sam.budget.utils;
 
 import java.text.DecimalFormat;
 

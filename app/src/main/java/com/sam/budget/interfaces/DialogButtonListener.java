@@ -1,4 +1,4 @@
-package com.sam.accel.budget.interfaces;
+package com.sam.budget.interfaces;
 
 import android.app.DialogFragment;
 

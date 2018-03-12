@@ -1,12 +1,12 @@
-package com.sam.accel.budget.database;
+package com.sam.budget.database;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.sam.accel.budget.model.Budget;
-import com.sam.accel.budget.model.Category;
-import com.sam.accel.budget.model.Expense;
-import com.sam.accel.budget.model.MonthlySavings;
+import com.sam.budget.model.Budget;
+import com.sam.budget.model.Category;
+import com.sam.budget.model.Expense;
+import com.sam.budget.model.MonthlySavings;
 
 import java.util.Date;
 import java.util.List;

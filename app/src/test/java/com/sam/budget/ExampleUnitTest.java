@@ -1,4 +1,4 @@
-package com.sam.accel;
+package com.sam.budget;
 
 import org.junit.Test;
 

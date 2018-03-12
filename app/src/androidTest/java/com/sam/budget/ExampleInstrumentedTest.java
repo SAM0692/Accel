@@ -1,4 +1,4 @@
-package com.sam.accel;
+package com.sam.budget;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

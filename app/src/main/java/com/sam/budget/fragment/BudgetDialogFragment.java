@@ -1,4 +1,4 @@
-package com.sam.accel.budget.fragment;
+package com.sam.budget.fragment;
 
 
 import android.app.AlertDialog;
@@ -12,17 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sam.accel.R;
-import com.sam.accel.budget.BudgetActivity;
-import com.sam.accel.budget.interfaces.DialogButtonListener;
-import com.sam.accel.budget.model.Budget;
-import com.sam.accel.budget.model.Category;
-import com.sam.accel.budget.model.MonthlySavings;
-import com.sam.accel.budget.utils.NumberFormatter;
+import com.sam.budget.R;
+import com.sam.budget.BudgetActivity;
+import com.sam.budget.interfaces.DialogButtonListener;
+import com.sam.budget.model.Budget;
+import com.sam.budget.model.Category;
+import com.sam.budget.model.MonthlySavings;
+import com.sam.budget.utils.NumberFormatter;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
 /**

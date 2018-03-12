@@ -1,4 +1,4 @@
-package com.sam.accel.budget.model;
+package com.sam.budget.model;
 
 import java.util.Date;
 
