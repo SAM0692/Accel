@@ -17,7 +17,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textview_available"
+            android:id="@+id/textview_available_category"
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textview_category_name"
@@ -30,7 +30,7 @@
     <!--THIS ELEMENT WILL BE PLACED AT THE LEFT SIDE OF THE BUTTON-->
     <EditText
         android:id="@+id/edittext_amount"
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/rl_cat_info"
         android:layout_marginTop="5dp"
@@ -38,14 +38,13 @@
         android:maxLength="9"
         android:textAlignment="textEnd" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_register_expense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/edittext_amount"
-        android:text="+"
-        android:onClick="onButtonRegisterExpense"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:src="@drawable/ic_action_add"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/edittext_amount" />
 
 
 </RelativeLayout>

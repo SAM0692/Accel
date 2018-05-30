@@ -36,6 +36,8 @@ public class BudgetDialogFragment extends DialogFragment {
 
     View dialogLayoutView;
 
+    BudgetActivity activity;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -55,6 +57,8 @@ public class BudgetDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         dialogLayoutView = inflater.inflate(layoutReference, null);
 
+        activity = (BudgetActivity) getActivity();
+
         loadData();
 
         builder.setView(dialogLayoutView);
@@ -71,7 +75,7 @@ public class BudgetDialogFragment extends DialogFragment {
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    nbdListener.onDialogNegativeClick(BudgetDialogFragment.this);
+                nbdListener.onDialogNegativeClick(BudgetDialogFragment.this);
                 }
             });
         }
@@ -99,7 +103,6 @@ public class BudgetDialogFragment extends DialogFragment {
     }
 
     private void loadSummaryData() {
-        BudgetActivity activity = (BudgetActivity) getActivity();
         Budget activeBudget = activity.getActiveBudget();
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
         String strCreationDate = df.format(activeBudget.getCreationDate());
@@ -107,23 +110,31 @@ public class BudgetDialogFragment extends DialogFragment {
         TextView tvBaseIncome = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_base_income);
         TextView tvDate = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_creation_date);
         TextView tvSavings = (TextView) dialogLayoutView.findViewById(R.id.textview_budget_total_savings);
+        TextView tvAvailable = (TextView) dialogLayoutView.findViewById(R.id.textview_available_budget);
 
         tvBaseIncome.append(" " + NumberFormatter.formatFloat(activeBudget.getBaseIncome()));
         tvDate.append(" " + strCreationDate);
         tvSavings.append(" " + NumberFormatter.formatFloat(activeBudget.getTotalSavings()));
+        tvAvailable.append(" " + loadAvailable());
 
 
     }
 
-    private void loadAvailable() {
-        BudgetActivity activity = (BudgetActivity) getActivity();
+    private String loadAvailable() {
         MonthlySavings month = activity.getMonth();
         List<Category> categories = activity.getCategories();
-        float available = month.getIncome();
+        float currentIncome = month.getIncome();
+        float totalCategoryLimit = 0;
+        String strAvailable;
+
 
         for (Category c : categories) {
-            available = available - c.getLimit();
+            totalCategoryLimit += c.getLimit();
         }
+
+        strAvailable = NumberFormatter.formatAvailable(currentIncome, totalCategoryLimit);
+
+        return strAvailable;
     }
 
 

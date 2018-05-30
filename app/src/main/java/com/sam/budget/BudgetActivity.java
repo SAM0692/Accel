@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,7 +23,6 @@ import com.sam.budget.fragment.BudgetDialogFragment;
 import com.sam.budget.model.Budget;
 import com.sam.budget.model.Category;
 import com.sam.budget.model.MonthlySavings;
-import com.sam.budget.utils.NumberFormatter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +42,7 @@ public class BudgetActivity extends Activity
     Menu budgetMenu;
     MenuItem miAddIncome;
     MenuItem miSummary;
+    MenuItem miNewCategory;
 
     float income;
     float available;
@@ -120,9 +119,6 @@ public class BudgetActivity extends Activity
         for (Category c : categories) {
             available = available + c.getLimit();
         }
-
-        TextView tvIncome = (TextView) findViewById(R.id.textview_income);
-        tvIncome.setText(NumberFormatter.formatAvailable(income, available));
     }
 
     @Override
@@ -132,12 +128,14 @@ public class BudgetActivity extends Activity
 
         budgetMenu = menu;
 
-        miAddIncome = budgetMenu.getItem(1);
-        miSummary = budgetMenu.getItem(2);
+        miAddIncome = budgetMenu.findItem(R.id.action_add_income);
+        miSummary = budgetMenu.findItem(R.id.action_summary);
+        miNewCategory = budgetMenu.findItem(R.id.action_new_category);
 
         if (activeBudget != null) {
             miAddIncome.setEnabled(true);
             miSummary.setEnabled(true);
+            miNewCategory.setEnabled(true);
         }
         return true;
     }
@@ -145,6 +143,9 @@ public class BudgetActivity extends Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_new_category:
+                layoutReference = R.layout.budget_dialog_new_category;
+                break;
             case R.id.action_new_budget:
                 layoutReference = R.layout.budget_dialog_new_budget;
                 break;
@@ -202,6 +203,7 @@ public class BudgetActivity extends Activity
 
         miAddIncome.setEnabled(true);
         miSummary.setEnabled(true);
+        miNewCategory.setEnabled(true);
 
         loadBudget();
 

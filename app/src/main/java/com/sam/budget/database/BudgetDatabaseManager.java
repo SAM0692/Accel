@@ -191,7 +191,7 @@ public class BudgetDatabaseManager {
 
         realm.beginTransaction();
 
-        if (updateCategory.getSpent() != 0) {
+        if (updateCategory.getSpent() > 0) {
             category.setSpent(category.getSpent() + updateCategory.getSpent());
             currentMonth.setSpent(currentMonth.getSpent() + updateCategory.getSpent());
         }

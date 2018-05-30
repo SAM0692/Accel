@@ -17,6 +17,6 @@ public class NumberFormatter {
         String total = formatFloat(amount1);
         String available = formatFloat(amount1 - amount2);
 
-        return total + " / " + available;
+        return available + " / " + total;
     }
 }

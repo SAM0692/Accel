@@ -1,28 +1,26 @@
 <resources>
     <string name="app_name">Budget</string>
+
+    <!--CONFIRMATION BUTTONS-->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-
-    <string name="modules">Modules</string>
-    <string-array name="modules_options">
-        <item>Budget Assistant</item>
-    </string-array>
     <string name="option_yes">Yes</string>
     <string name="option_no">No</string>
 
+    <!--ACTION MENU-->
+    <string name="action_add_category">Add category</string>
     <string name="action_new_budget">New Budget</string>
     <string name="action_add_income">Add Income</string>
     <string name="action_summary">Summary</string>
 
-    <string name="button_add_category">Add category</string>
-
     <string name="textview_income">Please input your current monthly income</string>
     <string name="textview_category_name">Name the category</string>
     <string name="textview_category_limit">Set a limit</string>
+    <string name="textview_add_income">Please input the amount to add:</string>
     <string name="textview_budget_base_income">Budget base income: </string>
     <string name="textview_budget_creation_date">Creation date: </string>
     <string name="textview_budget_total_savings"> Total savings: </string>
-    <string name="textview_add_income">Please input the amount to add:</string>
+    <string name="textview_available_budget"> Available funds: </string>
 
     <string name="checkbox_category_type_message">This month only</string>
 

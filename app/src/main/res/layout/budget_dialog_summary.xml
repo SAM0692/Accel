@@ -24,4 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/textview_budget_total_savings" />
+
+    <TextView
+        android:id="@+id/textview_available_budget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/textview_available_budget"/>
 </LinearLayout>
