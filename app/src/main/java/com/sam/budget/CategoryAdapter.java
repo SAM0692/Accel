@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sam.budget.database.BudgetDatabaseManager;
-import com.sam.budget.interfaces.ButtonListener;
 import com.sam.budget.model.Category;
 import com.sam.budget.model.Expense;
 import com.sam.budget.utils.NumberFormatter;
@@ -22,21 +21,16 @@ import com.sam.budget.utils.NumberFormatter;
 import java.util.Date;
 import java.util.List;
 
-import static java.security.AccessController.getContext;
-
 /**
  * Created by SAcevedoM on 28/09/2017.
  */
 
-public class CategoryAdapter extends BaseAdapter implements ButtonListener {
+public class CategoryAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private List<Category> categories;
     private BudgetDatabaseManager dbManager;
 
-    private Category category;
-    private TextView available;
-    private EditText amount;
 
     public CategoryAdapter(Context context, List<Category> categories) {
         this.context = context;
@@ -61,7 +55,7 @@ public class CategoryAdapter extends BaseAdapter implements ButtonListener {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.budget_list_item_category, parent, false);
@@ -77,82 +71,95 @@ public class CategoryAdapter extends BaseAdapter implements ButtonListener {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        category = categories.get(position);
-        available = holder.available;
-        amount = holder.amount;
+        final EditText amount = holder.amount;
         TextView categoryName = holder.categoryName;
         ImageButton regExpense = holder.regExpense;
 
-        categoryName.setText(category.getName());
-        available.setText(NumberFormatter.formatAvailable(category.getLimit(),
-                (category.getLimit() - category.getSpent())));
+        final Category category = categories.get(position);
 
+        categoryName.setText(category.getName());
+
+        updateAvailable(holder, category);
+
+        if (category.isTemporary()) {
+            amount.setVisibility(View.INVISIBLE);
+            regExpense.setVisibility(View.INVISIBLE);
+            return convertView;
+        } else {
+            amount.setVisibility(View.VISIBLE);
+            regExpense.setVisibility(View.VISIBLE);
+        }
+
+        // Set the onClickListener for the register expense button
         regExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onButtonClick(v);
+                String amountText = amount.getText().toString();
+                final float amountToReg = Float.valueOf(amountText);
+
+                if (amountText.equals("")) {
+                    Toast.makeText(v.getContext(), "Enter an amount first"
+                            , Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // If the amount to register ends up surpassing the limit for the category
+                // create a dialog with a warning and the choices of continuing or not with the process
+                if ((category.getLimit() - amountToReg) < 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle(category.getName() + " limit exceeded");
+                    builder.setMessage(R.string.dialog_message_limit_exceeded);
+                    builder.setCancelable(false);
+                    // YES
+                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            registerExpense(amountToReg);
+                            updateAvailable(holder, category);
+                        }
+                    });
+                    // NO
+                    builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                } else {
+                    registerExpense(amountToReg);
+                    updateAvailable(holder, category);
+                }
+
+                amount.setText("");
             }
         });
 
         return convertView;
     }
 
-    @Override
-    public void onButtonClick(View view) {
-        String amountText = amount.getText().toString();
+    private void registerExpense(float amountToReg) {
         dbManager = new BudgetDatabaseManager(context);
-        final Category updateCategory = new Category();
-        final float amountToReg = Float.valueOf(amountText);
-        final Expense newExpense = new Expense();
+        Category updateCategory = new Category();
+        Expense newExpense = new Expense();
 
-        if (amountText.equals("")) {
-            Toast.makeText(view.getContext(), "Enter an amount first"
-                    , Toast.LENGTH_SHORT).show();
-            return;
-        }
+        newExpense.setAmount(amountToReg);
+        newExpense.setDate(new Date());
 
-        if ((category.getLimit() - amountToReg) < 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-            builder.setTitle(category.getName() + " limit exceeded");
-            builder.setMessage(R.string.dialog_message_limit_exceeded);
-            builder.setCancelable(false);
-            // YES
-            builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    newExpense.setAmount(amountToReg);
-                    newExpense.setDate(new Date());
-
-                    updateCategory.setId(category.getId());
-                    updateCategory.setSpent(amountToReg);
-                    dbManager.updateCategory(updateCategory, newExpense);
-
-                    available.setText(NumberFormatter.formatAvailable(category.getLimit(), updateCategory.getSpent()));
-                }
-            });
-            // NO
-            builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
-        } else {
-            newExpense.setAmount(amountToReg);
-            newExpense.setDate(new Date());
-
-            updateCategory.setId(category.getId());
-            updateCategory.setSpent(amountToReg);
-            dbManager.updateCategory(updateCategory, newExpense);
-
-            available.setText(NumberFormatter.formatAvailable(category.getLimit(), updateCategory.getSpent()));
-        }
+        updateCategory.setSpent(amountToReg);
+        dbManager.updateCategory(updateCategory, newExpense);
 
         BudgetActivity activity = (BudgetActivity) context;
         activity.updateMonthAvailable();
-        amount.setText("");
+    }
+
+    private void updateAvailable(ViewHolder holder, Category category) {
+        if (category.isTemporary()) {
+            holder.available.setText(NumberFormatter.formatFloat(category.getSpent()));
+        } else {
+            holder.available.setText(NumberFormatter.formatAvailable(category.getLimit(), category.getSpent()));
+        }
     }
 
     private static class ViewHolder {

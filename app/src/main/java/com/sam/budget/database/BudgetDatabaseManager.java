@@ -108,6 +108,11 @@ public class BudgetDatabaseManager {
         newCategory.setLimit(limit);
         newCategory.setBudget(budget);
         newCategory.setTemporary(temporary);
+        if (temporary) {
+            newCategory.setSpent(limit);
+            MonthlySavings currentMonth = selectCurrentMonth(budget.getId());
+            currentMonth.setSpent(currentMonth.getSpent() + limit);
+        }
 
         realm.commitTransaction();
 
@@ -130,8 +135,8 @@ public class BudgetDatabaseManager {
     public MonthlySavings selectCurrentMonth(int idBudget) {
         MonthlySavings month;
 
-        month = realm.where(MonthlySavings.class).equalTo("budget.id", idBudget)
-                .findAllSorted("date", Sort.DESCENDING).first();
+        month = realm.where(MonthlySavings.class).equalTo("budget.id", idBudget).findAll()
+                .sort("date", Sort.DESCENDING).first();
 
         return month;
     }
@@ -176,10 +181,7 @@ public class BudgetDatabaseManager {
 
         currentMonth.setIncome(currentMonth.getIncome() + updateMonth.getIncome());
         currentMonth.setSpent(currentMonth.getSpent() + updateMonth.getSpent());
-
-        if (updateMonth.getSaved() != 0) {
-            currentMonth.setSaved(updateMonth.getSaved());
-        }
+        currentMonth.setSaved(currentMonth.getSaved() + updateMonth.getSaved());
 
         realm.commitTransaction();
     }
@@ -210,7 +212,7 @@ public class BudgetDatabaseManager {
         realm.beginTransaction();
 
         for (Category c : categories) {
-            if(c.isTemporary()) {
+            if (c.isTemporary()) {
                 c.deleteFromRealm();
             } else {
                 c.setSpent(0);

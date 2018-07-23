@@ -68,48 +68,52 @@ public class BudgetActivity extends Activity
             verifyMonth();
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
-            categories = dbManager.selectCategoriesByBudgetAsList(activeBudget);
-            adapter = new CategoryAdapter(this, categories);
-            ListView category = (ListView) findViewById(R.id.listview_category);
-            category.setAdapter(adapter);
-            category.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    final int categoryPosition = position;
-                    TextView tvCategoryName = (TextView) view.findViewById(R.id.textview_category_name);
-                    String categoryName = tvCategoryName.getText().toString();
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setTitle(categoryName);
-                    builder.setMessage(R.string.dialog_message_delete);
-                    // YES
-                    builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Category catForDeletion = categories.get(categoryPosition);
-                            categories.remove(catForDeletion);
-                            adapter.notifyDataSetChanged();
-                            dbManager.deleteCategory(catForDeletion.getId());
-                        }
-                    });
-                    // NO
-                    builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-
-                    return true;
-                }
-            });
+            loadCategories();
 
             // UPDATE THE MONTH'S AVAILABLE INCOME
             updateMonthAvailable();
         }
+    }
+
+    private void loadCategories() {
+        categories = dbManager.selectCategoriesByBudgetAsList(activeBudget);
+        adapter = new CategoryAdapter(this, categories);
+        ListView category = (ListView) findViewById(R.id.listview_category);
+        category.setAdapter(adapter);
+        category.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final int categoryPosition = position;
+                TextView tvCategoryName = (TextView) view.findViewById(R.id.textview_category_name);
+                String categoryName = tvCategoryName.getText().toString();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle(categoryName);
+                builder.setMessage(R.string.dialog_message_delete);
+                // YES
+                builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Category catForDeletion = categories.get(categoryPosition);
+                        categories.remove(catForDeletion);
+                        adapter.notifyDataSetChanged();
+                        dbManager.deleteCategory(catForDeletion.getId());
+                    }
+                });
+                // NO
+                builder.setNegativeButton(R.string.option_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+                return true;
+            }
+        });
     }
 
     public void updateMonthAvailable() {
@@ -133,9 +137,7 @@ public class BudgetActivity extends Activity
         miNewCategory = budgetMenu.findItem(R.id.action_new_category);
 
         if (activeBudget != null) {
-            miAddIncome.setEnabled(true);
-            miSummary.setEnabled(true);
-            miNewCategory.setEnabled(true);
+            enableMenuItems();
         }
         return true;
     }
@@ -195,15 +197,13 @@ public class BudgetActivity extends Activity
 
     private void createNewBudget(DialogFragment dialog) {
         Dialog d = dialog.getDialog();
-        EditText etIncome = (EditText) d.findViewById(R.id.edittext_income);
+        EditText etIncome = d.findViewById(R.id.edittext_income);
         income = Float.valueOf(etIncome.getText().toString());
 
         dbManager.closeActiveBudget();
         dbManager.insertBudget(income);
 
-        miAddIncome.setEnabled(true);
-        miSummary.setEnabled(true);
-        miNewCategory.setEnabled(true);
+        enableMenuItems();
 
         loadBudget();
 
@@ -225,9 +225,8 @@ public class BudgetActivity extends Activity
         temporary = cbtemporary.isChecked();
 
         if (validateLimit(limit)) {
-            Category cat = dbManager.insertCategory(name, limit, activeBudget, temporary);
-            categories.add(cat);
-            adapter.notifyDataSetChanged();
+            dbManager.insertCategory(name, limit, activeBudget, temporary);
+            loadCategories();
             updateMonthAvailable();
         }
     }
@@ -282,8 +281,8 @@ public class BudgetActivity extends Activity
 
             float savings = month.getIncome() - month.getSpent();
             if (savings > 0) {
-                updateMonth.setSaved(savings);
                 updateBudget.setTotalSavings(savings);
+                updateMonth.setSaved(savings);
             }
 
             dbManager.updateActiveBudget(updateBudget);
@@ -294,7 +293,7 @@ public class BudgetActivity extends Activity
             if (savings < 0) {
                 float spent = savings * -1;
 
-                updateMonth = new MonthlySavings();
+                updateMonth = month;
                 updateMonth.setSpent(spent);
 
                 dbManager.updateCurrentMonth(updateMonth);
@@ -304,6 +303,15 @@ public class BudgetActivity extends Activity
 
             Toast.makeText(this, "A new month has started", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Enables is disables some of the menu items
+    private void enableMenuItems() {
+        miAddIncome.setEnabled(true);
+        miSummary.setEnabled(true);
+        miNewCategory.setEnabled(true);
+        // Change the new category item visibility
+        miNewCategory.setVisible(true);
     }
 
     public Budget getActiveBudget() {

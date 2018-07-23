@@ -7,6 +7,7 @@
         android:id="@+id/action_new_category"
         android:showAsAction="ifRoom"
         android:enabled="false"
+        android:visible="false"
         android:title="@string/action_add_category"
         android:icon="@drawable/ic_action_add"/>
 

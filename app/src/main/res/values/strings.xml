@@ -29,7 +29,7 @@
     <string name="dialog_new_category_title">Create a new category</string>
     <string name="dialog_add_income_title">Add income</string>
     <string name="dialog_message_limit_exceeded">
-        The amount you are trying to register exceeds the for this category
+        The amount you are trying to register exceeds the limit for this category
                             if you choose to continue it can make the month\'s expenses to go over the limit.
                             Do you wish to continue?
     </string>
