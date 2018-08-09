@@ -114,7 +114,7 @@ public class CategoryAdapter extends BaseAdapter {
                     builder.setPositiveButton(R.string.option_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            registerExpense(amountToReg);
+                            registerExpense(amountToReg, category);
                             updateAvailable(holder, category);
                         }
                     });
@@ -128,7 +128,7 @@ public class CategoryAdapter extends BaseAdapter {
 
                     builder.show();
                 } else {
-                    registerExpense(amountToReg);
+                    registerExpense(amountToReg, category);
                     updateAvailable(holder, category);
                 }
 
@@ -139,16 +139,15 @@ public class CategoryAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void registerExpense(float amountToReg) {
+    private void registerExpense(float amountToReg, Category category) {
         dbManager = new BudgetDatabaseManager(context);
-        Category updateCategory = new Category();
         Expense newExpense = new Expense();
 
         newExpense.setAmount(amountToReg);
         newExpense.setDate(new Date());
 
-        updateCategory.setSpent(amountToReg);
-        dbManager.updateCategory(updateCategory, newExpense);
+        category.setSpent(category.getSpent() + amountToReg);
+        dbManager.updateCategory(category, newExpense);
 
         BudgetActivity activity = (BudgetActivity) context;
         activity.updateMonthAvailable();

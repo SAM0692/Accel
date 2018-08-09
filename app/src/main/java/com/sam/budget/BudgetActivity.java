@@ -276,27 +276,26 @@ public class BudgetActivity extends Activity
         int m2 = monthDate.get(Calendar.MONTH);
 
         if (day == 1 && m1 != m2) {
-            Budget updateBudget = new Budget();
-            MonthlySavings updateMonth = new MonthlySavings();
+            Budget updateBudget = dbManager.selectUnmanagedBudget();
+            MonthlySavings updateMonth = dbManager.selectUnmanagedMonth(updateBudget.getId());
 
             float savings = month.getIncome() - month.getSpent();
             if (savings > 0) {
-                updateBudget.setTotalSavings(savings);
-                updateMonth.setSaved(savings);
+                updateBudget.setTotalSavings(updateBudget.getTotalSavings() + savings);
+                updateMonth.setSaved(updateMonth.getSaved() + savings);
             }
 
             dbManager.updateActiveBudget(updateBudget);
             dbManager.updateCurrentMonth(updateMonth);
 
             // CREATE A NEW MONTH AND UPDATE IT'S SPENT VALUE IF NEEDED
-            month = dbManager.insertMonth(activeBudget);
+            month = dbManager.insertMonth();
             if (savings < 0) {
                 float spent = savings * -1;
 
-                updateMonth = month;
-                updateMonth.setSpent(spent);
+                month.setSpent(month.getSpent() + spent);
 
-                dbManager.updateCurrentMonth(updateMonth);
+                dbManager.updateCurrentMonth(month);
             }
 
             dbManager.resetCategories();

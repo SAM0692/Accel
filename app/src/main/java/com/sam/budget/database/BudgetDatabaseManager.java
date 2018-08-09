@@ -77,11 +77,12 @@ public class BudgetDatabaseManager {
 
         realm.commitTransaction();
 
-        insertMonth(newBudget);
+        insertMonth();
     }
 
     // MONTHLYSAVINGS TABLE
-    public MonthlySavings insertMonth(Budget activeBudget) {
+    public MonthlySavings insertMonth() {
+        Budget activeBudget = selectActiveBudget();
         int newId = createNewId(new MonthlySavings());
         Log.d("NEWID", "the new MonthlySaving id is: " + newId);
         realm.beginTransaction();
@@ -131,6 +132,10 @@ public class BudgetDatabaseManager {
         return budget;
     }
 
+    public Budget selectUnmanagedBudget() {
+        return realm.copyFromRealm(selectActiveBudget());
+    }
+
     // MONTHLYSAVINGS TABLE
     public MonthlySavings selectCurrentMonth(int idBudget) {
         MonthlySavings month;
@@ -141,8 +146,12 @@ public class BudgetDatabaseManager {
         return month;
     }
 
+    public MonthlySavings selectUnmanagedMonth(int idBudget) {
+        return realm.copyFromRealm(selectCurrentMonth(idBudget));
+    }
+
     // CATEGORY TABLE
-    public Category selectCategoryById(int idCategory) {
+    private Category selectCategoryById(int idCategory) {
         Category category;
 
         category = realm.where(Category.class).equalTo("id", idCategory).findFirst();
@@ -168,7 +177,7 @@ public class BudgetDatabaseManager {
 
         realm.beginTransaction();
 
-        activeBudget.setTotalSavings(activeBudget.getTotalSavings() + updateBudget.getTotalSavings());
+        activeBudget.setTotalSavings(updateBudget.getTotalSavings());
 
         realm.commitTransaction();
     }
@@ -179,9 +188,9 @@ public class BudgetDatabaseManager {
 
         realm.beginTransaction();
 
-        currentMonth.setIncome(currentMonth.getIncome() + updateMonth.getIncome());
-        currentMonth.setSpent(currentMonth.getSpent() + updateMonth.getSpent());
-        currentMonth.setSaved(currentMonth.getSaved() + updateMonth.getSaved());
+        currentMonth.setIncome(updateMonth.getIncome());
+        currentMonth.setSpent(updateMonth.getSpent());
+        currentMonth.setSaved(updateMonth.getSaved());
 
         realm.commitTransaction();
     }
@@ -194,7 +203,7 @@ public class BudgetDatabaseManager {
         realm.beginTransaction();
 
         if (updateCategory.getSpent() > 0) {
-            category.setSpent(category.getSpent() + updateCategory.getSpent());
+            category.setSpent(updateCategory.getSpent());
             currentMonth.setSpent(currentMonth.getSpent() + updateCategory.getSpent());
         }
 
