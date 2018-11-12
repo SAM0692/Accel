@@ -69,9 +69,6 @@ public class BudgetActivity extends Activity
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
             loadCategories();
-
-            // UPDATE THE MONTH'S AVAILABLE INCOME
-            updateMonthAvailable();
         }
     }
 
@@ -114,15 +111,6 @@ public class BudgetActivity extends Activity
                 return true;
             }
         });
-    }
-
-    public void updateMonthAvailable() {
-        income = month.getIncome();
-        available = 0;
-
-        for (Category c : categories) {
-            available = available + c.getLimit();
-        }
     }
 
     @Override
@@ -227,7 +215,6 @@ public class BudgetActivity extends Activity
         if (validateLimit(limit)) {
             dbManager.insertCategory(name, limit, activeBudget, temporary);
             loadCategories();
-            updateMonthAvailable();
         }
     }
 
@@ -241,7 +228,6 @@ public class BudgetActivity extends Activity
             MonthlySavings updateMonth = new MonthlySavings();
             updateMonth.setIncome(income);
             dbManager.updateCurrentMonth(updateMonth);
-            updateMonthAvailable();
         }
     }
 
@@ -280,22 +266,19 @@ public class BudgetActivity extends Activity
             MonthlySavings updateMonth = dbManager.selectUnmanagedMonth(updateBudget.getId());
 
             float savings = month.getIncome() - month.getSpent();
-            if (savings > 0) {
-                updateBudget.setTotalSavings(updateBudget.getTotalSavings() + savings);
-                updateMonth.setSaved(updateMonth.getSaved() + savings);
-            }
+
+            updateBudget.setTotalSavings(updateBudget.getTotalSavings() + savings);
+            updateMonth.setSaved(updateMonth.getSaved() + savings);
 
             dbManager.updateActiveBudget(updateBudget);
             dbManager.updateCurrentMonth(updateMonth);
 
-            // CREATE A NEW MONTH AND UPDATE IT'S SPENT VALUE IF NEEDED
             month = dbManager.insertMonth();
+            MonthlySavings newMonth = new MonthlySavings();
             if (savings < 0) {
-                float spent = savings * -1;
+                newMonth.setIncome(month.getIncome() + savings);
 
-                month.setSpent(month.getSpent() + spent);
-
-                dbManager.updateCurrentMonth(month);
+                dbManager.updateCurrentMonth(newMonth);
             }
 
             dbManager.resetCategories();

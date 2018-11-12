@@ -138,10 +138,9 @@ public class BudgetDatabaseManager {
 
     // MONTHLYSAVINGS TABLE
     public MonthlySavings selectCurrentMonth(int idBudget) {
-        MonthlySavings month;
 
-        month = realm.where(MonthlySavings.class).equalTo("budget.id", idBudget).findAll()
-                .sort("date", Sort.DESCENDING).first();
+        RealmResults<MonthlySavings> monthRealmResults = realm.where(MonthlySavings.class).equalTo("budget.id", idBudget).findAll();
+        MonthlySavings month = monthRealmResults.sort("date", Sort.DESCENDING).first();
 
         return month;
     }

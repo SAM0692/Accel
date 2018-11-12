@@ -148,9 +148,6 @@ public class CategoryAdapter extends BaseAdapter {
 
         category.setSpent(category.getSpent() + amountToReg);
         dbManager.updateCategory(category, newExpense);
-
-        BudgetActivity activity = (BudgetActivity) context;
-        activity.updateMonthAvailable();
     }
 
     private void updateAvailable(ViewHolder holder, Category category) {
