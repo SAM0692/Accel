@@ -257,11 +257,10 @@ public class BudgetActivity extends Activity
         Calendar monthDate = Calendar.getInstance();
         monthDate.setTime(month.getDate());
 
-        int day = today.get(Calendar.DAY_OF_MONTH);
-        int m1 = today.get(Calendar.MONTH);
-        int m2 = monthDate.get(Calendar.MONTH);
+        int m1 = monthDate.get(Calendar.MONTH);
+        int m2 = today.get(Calendar.MONTH);
 
-        if (day == 1 && m1 != m2) {
+        if ((m2 > m1) || (m2 < m1  && (m2 == 0))) {
             Budget updateBudget = dbManager.selectUnmanagedBudget();
             MonthlySavings updateMonth = dbManager.selectUnmanagedMonth(updateBudget.getId());
 
