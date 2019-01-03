@@ -95,7 +95,7 @@ public class BudgetDialogFragment extends DialogFragment {
                 break;
             case R.layout.budget_dialog_new_category:
                 titleReference = R.string.dialog_new_category_title;
-                loadAvailable();
+                activity.loadAvailable();
                 break;
             case R.layout.budget_dialog_add_income:
                 titleReference = R.string.dialog_add_income_title;
@@ -115,26 +115,9 @@ public class BudgetDialogFragment extends DialogFragment {
         tvBaseIncome.append(" " + NumberFormatter.formatFloat(activeBudget.getBaseIncome()));
         tvDate.append(" " + strCreationDate);
         tvSavings.append(" " + NumberFormatter.formatFloat(activeBudget.getTotalSavings()));
-        tvAvailable.append(" " + loadAvailable());
+        tvAvailable.append(" " + activity.loadAvailable());
 
 
-    }
-
-    private String loadAvailable() {
-        MonthlySavings month = activity.getMonth();
-        List<Category> categories = activity.getCategories();
-        float currentIncome = month.getIncome();
-        float totalCategoryLimit = 0;
-        String strAvailable;
-
-
-        for (Category c : categories) {
-            totalCategoryLimit += c.getLimit();
-        }
-
-        strAvailable = NumberFormatter.formatAvailable(currentIncome, totalCategoryLimit);
-
-        return strAvailable;
     }
 
 

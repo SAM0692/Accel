@@ -23,6 +23,7 @@ import com.sam.budget.fragment.BudgetDialogFragment;
 import com.sam.budget.model.Budget;
 import com.sam.budget.model.Category;
 import com.sam.budget.model.MonthlySavings;
+import com.sam.budget.utils.NumberFormatter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -43,9 +44,9 @@ public class BudgetActivity extends Activity
     MenuItem miAddIncome;
     MenuItem miSummary;
     MenuItem miNewCategory;
+    TextView tvAvailable;
 
     float income;
-    float available;
 
 
     @Override
@@ -69,6 +70,10 @@ public class BudgetActivity extends Activity
 
             //LOAD THE LIST OF THE BUDGET'S CATEGORIES
             loadCategories();
+
+            //CALCULATE AND LOAD THE AMOUNT OF MONEY STILL LEFT
+            tvAvailable = (TextView) findViewById(R.id.textview_available_month);
+            tvAvailable.setText(loadAvailable());
         }
     }
 
@@ -113,45 +118,19 @@ public class BudgetActivity extends Activity
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_budget, menu);
+    public String loadAvailable() {
+        float currentIncome = month.getIncome();
+        float totalCategoryLimit = 0;
+        String strAvailable;
 
-        budgetMenu = menu;
 
-        miAddIncome = budgetMenu.findItem(R.id.action_add_income);
-        miSummary = budgetMenu.findItem(R.id.action_summary);
-        miNewCategory = budgetMenu.findItem(R.id.action_new_category);
-
-        if (activeBudget != null) {
-            enableMenuItems();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_new_category:
-                layoutReference = R.layout.budget_dialog_new_category;
-                break;
-            case R.id.action_new_budget:
-                layoutReference = R.layout.budget_dialog_new_budget;
-                break;
-            case R.id.action_add_income:
-                layoutReference = R.layout.budget_dialog_add_income;
-                break;
-            case R.id.action_summary:
-                layoutReference = R.layout.budget_dialog_summary;
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+        for (Category c : categories) {
+            totalCategoryLimit += c.getLimit();
         }
 
-        showBudgetDialog();
+        strAvailable = NumberFormatter.formatAvailable(currentIncome, totalCategoryLimit);
 
-        return true;
+        return strAvailable;
     }
 
 
@@ -162,43 +141,6 @@ public class BudgetActivity extends Activity
         dialog.show(getFragmentManager(), "BudgetDialog");
     }
 
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        switch (layoutReference) {
-            case R.layout.budget_dialog_new_budget:
-                createNewBudget(dialog);
-                break;
-            case R.layout.budget_dialog_new_category:
-                createNewCategory(dialog);
-                break;
-            case R.layout.budget_dialog_add_income:
-                addIncome(dialog);
-                break;
-        }
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        dialog.getDialog().cancel();
-    }
-
-    private void createNewBudget(DialogFragment dialog) {
-        Dialog d = dialog.getDialog();
-        EditText etIncome = d.findViewById(R.id.edittext_income);
-        income = Float.valueOf(etIncome.getText().toString());
-
-        dbManager.closeActiveBudget();
-        dbManager.insertBudget(income);
-
-        enableMenuItems();
-
-        loadBudget();
-
-        Toast.makeText(this, "A new budget has been created", Toast.LENGTH_SHORT).show();
-
-
-    }
 
     private void createNewCategory(DialogFragment dialog) {
         String name;
@@ -215,6 +157,7 @@ public class BudgetActivity extends Activity
         if (validateLimit(limit)) {
             dbManager.insertCategory(name, limit, activeBudget, temporary);
             loadCategories();
+            tvAvailable.setText(loadAvailable());
         }
     }
 
@@ -260,7 +203,7 @@ public class BudgetActivity extends Activity
         int m1 = monthDate.get(Calendar.MONTH);
         int m2 = today.get(Calendar.MONTH);
 
-        if ((m2 > m1) || (m2 < m1  && (m2 == 0))) {
+        if ((m2 > m1) || (m2 < m1 && (m2 == 0))) {
             Budget updateBudget = dbManager.selectUnmanagedBudget();
             MonthlySavings updateMonth = dbManager.selectUnmanagedMonth(updateBudget.getId());
 
@@ -305,6 +248,84 @@ public class BudgetActivity extends Activity
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_budget, menu);
+
+        budgetMenu = menu;
+
+        miAddIncome = budgetMenu.findItem(R.id.action_add_income);
+        miSummary = budgetMenu.findItem(R.id.action_summary);
+        miNewCategory = budgetMenu.findItem(R.id.action_new_category);
+
+        if (activeBudget != null) {
+            enableMenuItems();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_new_category:
+                layoutReference = R.layout.budget_dialog_new_category;
+                break;
+            case R.id.action_new_budget:
+                layoutReference = R.layout.budget_dialog_new_budget;
+                break;
+            case R.id.action_add_income:
+                layoutReference = R.layout.budget_dialog_add_income;
+                break;
+            case R.id.action_summary:
+                layoutReference = R.layout.budget_dialog_summary;
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        showBudgetDialog();
+
+        return true;
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        switch (layoutReference) {
+            case R.layout.budget_dialog_new_budget:
+                createNewBudget(dialog);
+                break;
+            case R.layout.budget_dialog_new_category:
+                createNewCategory(dialog);
+                break;
+            case R.layout.budget_dialog_add_income:
+                addIncome(dialog);
+                break;
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dialog.getDialog().cancel();
+    }
+
+    private void createNewBudget(DialogFragment dialog) {
+        Dialog d = dialog.getDialog();
+        EditText etIncome = d.findViewById(R.id.edittext_income);
+        income = Float.valueOf(etIncome.getText().toString());
+
+        dbManager.closeActiveBudget();
+        dbManager.insertBudget(income);
+
+        enableMenuItems();
+
+        loadBudget();
+
+        Toast.makeText(this, "A new budget has been created", Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override
