@@ -16,12 +16,9 @@ import com.sam.budget.R;
 import com.sam.budget.BudgetActivity;
 import com.sam.budget.interfaces.DialogButtonListener;
 import com.sam.budget.model.Budget;
-import com.sam.budget.model.Category;
-import com.sam.budget.model.MonthlySavings;
 import com.sam.budget.utils.NumberFormatter;
 
 import java.text.DateFormat;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,7 +92,7 @@ public class BudgetDialogFragment extends DialogFragment {
                 break;
             case R.layout.budget_dialog_new_category:
                 titleReference = R.string.dialog_new_category_title;
-                activity.loadAvailable();
+                activity.calculateAvailable();
                 break;
             case R.layout.budget_dialog_add_income:
                 titleReference = R.string.dialog_add_income_title;
@@ -115,7 +112,7 @@ public class BudgetDialogFragment extends DialogFragment {
         tvBaseIncome.append(" " + NumberFormatter.formatFloat(activeBudget.getBaseIncome()));
         tvDate.append(" " + strCreationDate);
         tvSavings.append(" " + NumberFormatter.formatFloat(activeBudget.getTotalSavings()));
-        tvAvailable.append(" " + activity.loadAvailable());
+        tvAvailable.append(" " + activity.calculateAvailable());
 
 
     }

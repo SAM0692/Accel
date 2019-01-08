@@ -73,7 +73,7 @@ public class BudgetActivity extends Activity
 
             //CALCULATE AND LOAD THE AMOUNT OF MONEY STILL LEFT
             tvAvailable = (TextView) findViewById(R.id.textview_available_month);
-            tvAvailable.setText(loadAvailable());
+            tvAvailable.setText(calculateAvailable());
         }
     }
 
@@ -118,7 +118,7 @@ public class BudgetActivity extends Activity
         });
     }
 
-    public String loadAvailable() {
+    public String calculateAvailable() {
         float currentIncome = month.getIncome();
         float totalCategoryLimit = 0;
         String strAvailable;
@@ -157,7 +157,7 @@ public class BudgetActivity extends Activity
         if (validateLimit(limit)) {
             dbManager.insertCategory(name, limit, activeBudget, temporary);
             loadCategories();
-            tvAvailable.setText(loadAvailable());
+            tvAvailable.setText(calculateAvailable());
         }
     }
 
@@ -168,9 +168,10 @@ public class BudgetActivity extends Activity
         income = Float.valueOf(etincome.getText().toString());
 
         if (income > 0) {
-            MonthlySavings updateMonth = new MonthlySavings();
-            updateMonth.setIncome(income);
+            MonthlySavings updateMonth = dbManager.selectUnmanagedMonth(activeBudget.getId());
+            updateMonth.setIncome(updateMonth.getIncome() + income);
             dbManager.updateCurrentMonth(updateMonth);
+            tvAvailable.setText(calculateAvailable());
         }
     }
 
